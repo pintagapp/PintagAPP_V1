@@ -30,12 +30,16 @@ namespace PintagAPP.Presentacion.ViewModels
 
             var resultado = await _iniciarSesion.EjecutarAsync(Correo, Contrasena);
 
-            MensajeEsError = !resultado.EsExito;
-            Mensaje = resultado.EsExito && _sesion.Usuario!.EsAdmin
-                ? resultado.Mensaje + " (administrador)"
-                : resultado.Mensaje;
-
             EstaOcupado = false;
+
+            if (resultado.EsExito)
+            {
+                await Shell.Current.GoToAsync("..");   // vuelve a la pantalla anterior
+                return;
+            }
+
+            MensajeEsError = true;
+            Mensaje = resultado.Mensaje;
         }
 
         [RelayCommand]

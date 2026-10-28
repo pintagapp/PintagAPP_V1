@@ -23,4 +23,21 @@ namespace PintagAPP.Infraestructura.Supabase
         [JsonPropertyName("nombres_completos")] public string NombresCompletos { get; set; } = "";
         [JsonPropertyName("rol")] public string Rol { get; set; } = "";
     }
+    // Fila de la tabla categorias
+    public class CategoriaDto
+    {
+        [JsonPropertyName("id")] public long Id { get; set; }
+        [JsonPropertyName("nombre")] public string Nombre { get; set; } = "";
+        [JsonPropertyName("icono")] public string Icono { get; set; } = "";
+        [JsonPropertyName("orden")] public int Orden { get; set; }
+    }
+    // Fila de la tabla noticias
+    public class NoticiaDto
+    {
+        [JsonPropertyName("id")] public long Id { get; set; }
+        [JsonPropertyName("titulo")] public string Titulo { get; set; } = "";
+        [JsonPropertyName("contenido")] public string Contenido { get; set; } = "";
+        [JsonPropertyName("imagen_url")] public string? ImagenUrl { get; set; }
+        [JsonPropertyName("fecha_publicacion")] public DateTimeOffset FechaPublicacion { get; set; }
+    }
 }

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:PintagAPP.Presentacion.ViewModels"
+             x:Class="PintagAPP.Presentacion.Views.InicioPage"
+             x:DataType="vm:InicioViewModel"
+             Title="Inicio"
+             Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="14">
+
+            <!-- Portada: foto de Píntag con el saludo encima -->
+            <Grid HeightRequest="200" Margin="-20,-20,-20,0">
+
+                <Image Source="{Binding PortadaUrl}" Aspect="AspectFill" />
+
+                <BoxView>
+                    <BoxView.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Color="#00000000" Offset="0.0" />
+                            <GradientStop Color="#55000000" Offset="0.45" />
+                            <GradientStop Color="#DD000000" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </BoxView.Background>
+                </BoxView>
+
+                <VerticalStackLayout VerticalOptions="End" Padding="20,0,20,16" Spacing="2">
+                    <Label Text="{Binding Saludo}" FontSize="28" FontAttributes="Bold" TextColor="White">
+                        <Label.Shadow>
+                            <Shadow Brush="Black" Offset="1,2" Radius="6" Opacity="0.8" />
+                        </Label.Shadow>
+                    </Label>
+                    <Label Text="Bienvenido a la app de emprendedores" FontSize="16" TextColor="#FFD54F">
+                        <Label.Shadow>
+                            <Shadow Brush="Black" Offset="1,1" Radius="4" Opacity="0.8" />
+                        </Label.Shadow>
+                    </Label>
+                    <Label Text="¿Qué necesitas hoy?" FontSize="16" TextColor="White">
+                        <Label.Shadow>
+                            <Shadow Brush="Black" Offset="1,1" Radius="4" Opacity="0.8" />
+                        </Label.Shadow>
+                    </Label>
+                </VerticalStackLayout>
+
+            </Grid>
+            <SearchBar Placeholder="Buscar servicios o productos" IsEnabled="False" />
+
+            <Label Text="Categorías" FontSize="18" FontAttributes="Bold" />
+
+            <ActivityIndicator IsRunning="{Binding EstaCargando}" IsVisible="{Binding EstaCargando}" />
+            <Label Text="{Binding Mensaje}" TextColor="Red" />
+
+            <CollectionView ItemsSource="{Binding Categorias}" SelectionMode="None">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="3" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:CategoriaItem">
+                        <Border Margin="4" Padding="8" Stroke="Transparent"
+                                StrokeShape="RoundRectangle 12"
+                                BackgroundColor="{AppThemeBinding Light=#F2F6FA, Dark=#2A2A2A}">
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="{Binding Emoji}" FontSize="30" HorizontalOptions="Center" />
+                                <Label Text="{Binding Nombre}" FontSize="12" MaxLines="2"
+                                       HorizontalTextAlignment="Center" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Label Text="Noticias de la comunidad" FontSize="18" FontAttributes="Bold" />
+            <Label Text="Aún no hay noticias publicadas." TextColor="Gray" IsVisible="{Binding SinNoticias}" />
+
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Noticias}" Spacing="12" Padding="0,0,0,20">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="vm:NoticiaItem">
+                        <Border Stroke="Transparent" StrokeShape="RoundRectangle 12"
+                                BackgroundColor="{AppThemeBinding Light=#F2F6FA, Dark=#2A2A2A}">
+                            <VerticalStackLayout>
+                                <Image Source="{Binding ImagenUrl}" HeightRequest="220" Aspect="AspectFit"
+                                       IsVisible="{Binding TieneImagen}" />
+                                <VerticalStackLayout Padding="12" Spacing="4">
+                                    <Label Text="{Binding Titulo}" FontSize="16" FontAttributes="Bold" />
+                                    <Label Text="{Binding Contenido}" FontSize="13" MaxLines="4" />
+                                    <Label Text="{Binding Fecha}" FontSize="11" TextColor="Gray" />
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

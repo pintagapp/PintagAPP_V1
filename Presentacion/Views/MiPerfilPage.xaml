@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:PintagAPP.Presentacion.ViewModels"
+             x:Class="PintagAPP.Presentacion.Views.MiPerfilPage"
+             x:DataType="vm:MiPerfilViewModel"
+             Title="Mi perfil">
+
+    <VerticalStackLayout Padding="24" Spacing="14">
+
+        <!-- Sin sesión -->
+        <VerticalStackLayout Spacing="12" IsVisible="{Binding SinSesion}">
+            <Label Text="Aún no has iniciado sesión" FontSize="22" FontAttributes="Bold" />
+            <Label Text="Inicia sesión para contactar a los oferentes, calificar u ofrecer tus servicios."
+                   TextColor="Gray" />
+            <Button Text="Iniciar sesión" Command="{Binding IrALoginCommand}" />
+        </VerticalStackLayout>
+
+        <!-- Con sesión -->
+        <VerticalStackLayout Spacing="12" IsVisible="{Binding ConSesion}">
+            <Label Text="{Binding Nombre}" FontSize="22" FontAttributes="Bold" />
+            <Label Text="Administrador" TextColor="Green" IsVisible="{Binding EsAdmin}" />
+            <Label Text="Panel de administración: próximamente" TextColor="Gray" IsVisible="{Binding EsAdmin}" />
+            <Button Text="Cerrar sesión" Command="{Binding CerrarSesionCommand}" BackgroundColor="Gray" />
+        </VerticalStackLayout>
+
+    </VerticalStackLayout>
+</ContentPage>

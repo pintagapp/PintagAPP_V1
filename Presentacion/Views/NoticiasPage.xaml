@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:PintagAPP.Presentacion.ViewModels"
+             x:Class="PintagAPP.Presentacion.Views.NoticiasPage"
+             x:DataType="vm:NoticiasViewModel"
+             Title="Noticias de la comunidad">
+
+    <RefreshView IsRefreshing="{Binding EstaCargando}" Command="{Binding RefrescarCommand}">
+        <CollectionView ItemsSource="{Binding Noticias}" SelectionMode="None">
+
+            <CollectionView.Header>
+                <VerticalStackLayout Padding="16,12,16,0">
+                    <Label Text="{Binding Mensaje}" TextColor="Red" />
+                    <Label Text="Aún no hay noticias publicadas." TextColor="Gray"
+                           IsVisible="{Binding SinNoticias}" />
+                </VerticalStackLayout>
+            </CollectionView.Header>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="vm:NoticiaItem">
+                    <Border Margin="16,8" Stroke="Transparent" StrokeShape="RoundRectangle 12"
+                            BackgroundColor="{AppThemeBinding Light=#F2F6FA, Dark=#2A2A2A}">
+                        <VerticalStackLayout>
+                            <Image Source="{Binding ImagenUrl}" HeightRequest="240" Aspect="AspectFit"
+                                   IsVisible="{Binding TieneImagen}" />
+                            <VerticalStackLayout Padding="14" Spacing="6">
+                                <Label Text="{Binding Titulo}" FontSize="18" FontAttributes="Bold" />
+                                <Label Text="{Binding Contenido}" FontSize="14" />
+                                <Label Text="{Binding Fecha}" FontSize="12" TextColor="Gray" />
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+    </RefreshView>
+</ContentPage>
