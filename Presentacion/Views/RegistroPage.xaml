@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:PintagAPP.Presentacion.ViewModels"
+             x:Class="PintagAPP.Presentacion.Views.RegistroPage"
+             x:DataType="vm:RegistroViewModel"
+             Title="Crear cuenta">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="14">
+
+            <Label Text="Crea tu cuenta" FontSize="26" FontAttributes="Bold" />
+            <Label Text="Conecta con tu comunidad" TextColor="Gray" />
+
+            <Entry Placeholder="Nombres y apellidos completos" Text="{Binding NombresCompletos}" />
+            <Entry Placeholder="Cédula" Keyboard="Numeric" MaxLength="10" Text="{Binding Cedula}" />
+            <Entry Placeholder="Correo electrónico" Keyboard="Email" Text="{Binding Correo}" />
+            <Entry Placeholder="Contraseña (mínimo 8 caracteres)" IsPassword="True" Text="{Binding Contrasena}" />
+
+            <HorizontalStackLayout Spacing="8">
+                <CheckBox IsChecked="{Binding AceptaAviso}" VerticalOptions="Start" />
+                <Label Text="He leído y acepto la Política de Privacidad (versión 1.0). Autorizo al GAD Parroquial de Píntag a tratar mis datos personales conforme a la LOPDP."
+                       FontSize="13" WidthRequest="280" VerticalOptions="Center" />
+            </HorizontalStackLayout>
+
+            <Button Text="Crear cuenta"
+                    Command="{Binding CrearCuentaCommand}"
+                    IsEnabled="{Binding AceptaAviso}" />
+
+            <ActivityIndicator IsRunning="{Binding EstaOcupado}" IsVisible="{Binding EstaOcupado}" />
+
+            <Label Text="{Binding Mensaje}" FontSize="14" HorizontalTextAlignment="Center">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label" Binding="{Binding MensajeEsError}" Value="True">
+                        <Setter Property="TextColor" Value="Red" />
+                    </DataTrigger>
+                    <DataTrigger TargetType="Label" Binding="{Binding MensajeEsError}" Value="False">
+                        <Setter Property="TextColor" Value="Green" />
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

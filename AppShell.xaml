@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="PintagAPP.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:PintagAPP"
+    xmlns:views="clr-namespace:PintagAPP.Presentacion.Views"
+    Title="PintagAPP">
+
+    <ShellContent
+        Title="Registro"
+        ContentTemplate="{DataTemplate local:RegistroPage}"
+        Route="RegistroPage" />
+
+</Shell>
