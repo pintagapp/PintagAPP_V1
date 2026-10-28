@@ -1,11 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
 using PintagAPP.CasosUso.Cuenta;
 using PintagAPP.CasosUso.Interfaces;
+using PintagAPP.CasosUso.Noticias;
 using PintagAPP.CasosUso.Ofertas;
+using PintagAPP.CasosUso.Perfiles;
 using PintagAPP.Infraestructura.Supabase;
 using PintagAPP.Presentacion.ViewModels;
 using PintagAPP.Presentacion.Views;
-using PintagAPP.CasosUso.Noticias;
 
 namespace PintagAPP
 {
@@ -30,6 +31,8 @@ namespace PintagAPP
             builder.Services.AddSingleton<IAuthServicio, SupabaseAuthServicio>();
             builder.Services.AddSingleton<ICatalogoRepositorio, SupabaseCatalogoRepositorio>();
             builder.Services.AddSingleton<INoticiaRepositorio, SupabaseNoticiaRepositorio>();
+            builder.Services.AddSingleton<IPerfilRepositorio, SupabasePerfilRepositorio>();
+            builder.Services.AddSingleton<IAlmacenamientoServicio, SupabaseAlmacenamiento>();
 
             // Estado de la app
             builder.Services.AddSingleton<SesionActual>();
@@ -40,7 +43,7 @@ namespace PintagAPP
             builder.Services.AddTransient<ListarCategorias>();
             builder.Services.AddTransient<ControlSesion>();
             builder.Services.AddTransient<ListarNoticias>();
-            
+            builder.Services.AddTransient<GestionarMiPerfil>();
 
             // Presentación
             builder.Services.AddTransient<RegistroViewModel>();
@@ -54,6 +57,8 @@ namespace PintagAPP
             builder.Services.AddTransient<NoticiasPage>();
             builder.Services.AddTransient<MiPerfilViewModel>();
             builder.Services.AddTransient<MiPerfilPage>();
+            builder.Services.AddTransient<OfrecerViewModel>();
+            builder.Services.AddTransient<OfrecerPage>();
 
             return builder.Build();
         }

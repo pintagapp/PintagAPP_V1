@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:PintagAPP.Presentacion.ViewModels"
+             x:Class="PintagAPP.Presentacion.Views.OfrecerPage"
+             x:DataType="vm:OfrecerViewModel"
+             Title="Mi negocio">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="12">
+
+            <Label Text="{Binding EstadoTexto}" IsVisible="{Binding TieneEstado}" FontSize="14" />
+
+            <!-- Foto de perfil -->
+            <Border WidthRequest="120" HeightRequest="120" StrokeShape="RoundRectangle 60"
+                    HorizontalOptions="Center" Stroke="LightGray"
+                    BackgroundColor="{AppThemeBinding Light=#F2F6FA, Dark=#2A2A2A}">
+                <Image Source="{Binding Foto}" Aspect="AspectFill" />
+            </Border>
+            <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                <Button Text="📷 Tomar foto" Command="{Binding TomarFotoCommand}" />
+                <Button Text="🖼️ Galería" Command="{Binding ElegirFotoCommand}" />
+            </HorizontalStackLayout>
+
+            <Label Text="Tu nombre (de tu cuenta)" FontSize="12" TextColor="Gray" />
+            <Entry Text="{Binding NombrePersona}" IsReadOnly="True" />
+
+            <Label Text="Nombre de tu negocio (opcional)" FontSize="12" TextColor="Gray" />
+            <Entry Placeholder="Ej.: Panadería Don Pepe" MaxLength="80" Text="{Binding NombreNegocio}" />
+
+            <Label Text="Teléfono / WhatsApp" FontSize="12" TextColor="Gray" />
+            <Entry Placeholder="Ej.: 0991234567" Keyboard="Telephone" MaxLength="15" Text="{Binding Telefono}" />
+
+            <Label Text="Barrio o comunidad" FontSize="12" TextColor="Gray" />
+            <Picker Title="Elige tu barrio" ItemsSource="{Binding Barrios}"
+                    SelectedItem="{Binding BarrioSeleccionado}" />
+
+            <Label Text="¿A qué te dedicas?" FontSize="12" TextColor="Gray" />
+            <Editor Placeholder="Cuéntale a la comunidad qué ofreces, tu experiencia, horarios…"
+                    MaxLength="500" AutoSize="TextChanges" HeightRequest="120"
+                    Text="{Binding Descripcion}" />
+
+            <!-- Autorización: solo la primera vez -->
+            <HorizontalStackLayout Spacing="8" IsVisible="{Binding EsNuevo}">
+                <CheckBox IsChecked="{Binding AutorizaPublicacion}" VerticalOptions="Start" />
+                <Label FontSize="12" WidthRequest="290"
+                       Text="Autorizo que mi nombre, el nombre de mi negocio, mi barrio, la descripción, las fotos y mis ofertas sean visibles para cualquier persona que use la app, y que mi teléfono sea visible para los usuarios registrados. Mi cédula y mi dirección no se publicarán. Puedo retirar mi perfil en cualquier momento." />
+            </HorizontalStackLayout>
+
+            <Button Text="{Binding TextoBoton}" Command="{Binding GuardarCommand}" />
+
+            <ActivityIndicator IsRunning="{Binding EstaOcupado}" IsVisible="{Binding EstaOcupado}" />
+
+            <Label Text="{Binding Mensaje}" HorizontalTextAlignment="Center">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label" Binding="{Binding MensajeEsError}" Value="True">
+                        <Setter Property="TextColor" Value="Red" />
+                    </DataTrigger>
+                    <DataTrigger TargetType="Label" Binding="{Binding MensajeEsError}" Value="False">
+                        <Setter Property="TextColor" Value="Green" />
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -8,5 +8,6 @@ namespace PintagAPP.CasosUso.Interfaces
     public interface ICatalogoRepositorio
     {
         Task<List<Categoria>> ObtenerCategoriasAsync();
+        Task<List<Barrio>> ObtenerBarriosAsync();
     }
 }

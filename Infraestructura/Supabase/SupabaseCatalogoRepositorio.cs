@@ -29,5 +29,14 @@ namespace PintagAPP.Infraestructura.Supabase
                 })
                 .ToList();
         }
+        public async Task<List<Barrio>> ObtenerBarriosAsync()
+        {
+            var filas = await _http.Cliente.GetFromJsonAsync<List<BarrioDto>>(
+                "rest/v1/barrios?select=id,nombre&activa=eq.true&order=orden.asc");
+
+            return (filas ?? new List<BarrioDto>())
+                .Select(f => new Barrio { Id = f.Id, Nombre = f.Nombre })
+                .ToList();
+        }
     }
 }

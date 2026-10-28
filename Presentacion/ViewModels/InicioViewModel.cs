@@ -56,15 +56,21 @@ namespace PintagAPP.Presentacion.ViewModels
         // El campo "icono" de la BD se traduce aquí a un dibujo (es un tema de presentación)
         private static string EmojiDe(string icono) => icono switch
         {
-            "tecnologia" => "💻",
-            "oficios" => "🔨",
-            "electricidad" => "⚡",
+            "turismo" => "🏔️",
+            "chagra" => "🐎",
+            "ganaderia" => "🐄",
+            "agro" => "🌾",
             "alimentos" => "🍞",
             "artesanias" => "🏺",
-            "agro" => "🌾",
+            "eventos" => "🎉",
+            "mecanica" => "🔧",
+            "oficios" => "🔨",
+            "electricidad" => "⚡",
+            "tecnologia" => "💻",
             "hogar" => "🏠",
             "belleza" => "✂️",
             "transporte" => "🚚",
+            "clases" => "📚",
             _ => "📦"
         };
     }
