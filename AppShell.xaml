@@ -5,11 +5,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:PintagAPP"
     xmlns:views="clr-namespace:PintagAPP.Presentacion.Views"
-    Title="PintagAPP">
+    Shell.FlyoutBehavior="Disabled"
+    Title="Píntag Conecta">
 
     <ShellContent
-        Title="Registro"
-        ContentTemplate="{DataTemplate local:RegistroPage}"
-        Route="RegistroPage" />
+    Title="Iniciar sesión"
+    ContentTemplate="{DataTemplate views:LoginPage}"
+    Route="LoginPage" />
 
 </Shell>

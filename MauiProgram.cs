@@ -27,12 +27,18 @@ namespace PintagAPP
             builder.Services.AddSingleton<SupabaseHttp>();
             builder.Services.AddSingleton<IAuthServicio, SupabaseAuthServicio>();
 
+            // Estado de la app
+            builder.Services.AddSingleton<SesionActual>();
+
             // Casos de uso
             builder.Services.AddTransient<RegistrarUsuario>();
+            builder.Services.AddTransient<IniciarSesion>();
 
             // Presentación
             builder.Services.AddTransient<RegistroViewModel>();
             builder.Services.AddTransient<RegistroPage>();
+            builder.Services.AddTransient<LoginViewModel>();
+            builder.Services.AddTransient<LoginPage>();
 
             return builder.Build();
         }

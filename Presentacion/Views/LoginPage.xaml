@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:PintagAPP.Presentacion.ViewModels"
+             x:Class="PintagAPP.Presentacion.Views.LoginPage"
+             x:DataType="vm:LoginViewModel"
+             Title="Iniciar sesión">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="14">
+
+            <Label Text="Píntag Conecta" FontSize="28" FontAttributes="Bold" />
+            <Label Text="Inicia sesión para contactar y ofrecer" TextColor="Gray" />
+
+            <Entry Placeholder="Correo electrónico" Keyboard="Email" Text="{Binding Correo}" />
+            <Entry Placeholder="Contraseña" IsPassword="True" Text="{Binding Contrasena}" />
+
+            <Button Text="Iniciar sesión" Command="{Binding IniciarSesionCommand}" />
+
+            <ActivityIndicator IsRunning="{Binding EstaOcupado}" IsVisible="{Binding EstaOcupado}" />
+
+            <Label Text="{Binding Mensaje}" FontSize="14" HorizontalTextAlignment="Center">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label" Binding="{Binding MensajeEsError}" Value="True">
+                        <Setter Property="TextColor" Value="Red" />
+                    </DataTrigger>
+                    <DataTrigger TargetType="Label" Binding="{Binding MensajeEsError}" Value="False">
+                        <Setter Property="TextColor" Value="Green" />
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
+
+            <Button Text="¿No tienes cuenta? Regístrate"
+                    Command="{Binding IrARegistroCommand}"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource Primary}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
