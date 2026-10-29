@@ -47,5 +47,10 @@ namespace PintagAPP.Presentacion.ViewModels
         {
             await Shell.Current.GoToAsync("OfrecerPage");
         }
+        [RelayCommand]
+        private async Task IrAMisOfertasAsync()
+        {
+            await Shell.Current.GoToAsync("MisOfertasPage");
+        }
     }
 }

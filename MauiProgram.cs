@@ -33,6 +33,7 @@ namespace PintagAPP
             builder.Services.AddSingleton<INoticiaRepositorio, SupabaseNoticiaRepositorio>();
             builder.Services.AddSingleton<IPerfilRepositorio, SupabasePerfilRepositorio>();
             builder.Services.AddSingleton<IAlmacenamientoServicio, SupabaseAlmacenamiento>();
+            builder.Services.AddSingleton<IOfertaRepositorio, SupabaseOfertaRepositorio>();
 
             // Estado de la app
             builder.Services.AddSingleton<SesionActual>();
@@ -44,6 +45,7 @@ namespace PintagAPP
             builder.Services.AddTransient<ControlSesion>();
             builder.Services.AddTransient<ListarNoticias>();
             builder.Services.AddTransient<GestionarMiPerfil>();
+            builder.Services.AddTransient<GestionarMisOfertas>();
 
             // Presentación
             builder.Services.AddTransient<RegistroViewModel>();
@@ -59,6 +61,10 @@ namespace PintagAPP
             builder.Services.AddTransient<MiPerfilPage>();
             builder.Services.AddTransient<OfrecerViewModel>();
             builder.Services.AddTransient<OfrecerPage>();
+            builder.Services.AddTransient<MisOfertasViewModel>();
+            builder.Services.AddTransient<MisOfertasPage>();
+            builder.Services.AddTransient<OfertaFormViewModel>();
+            builder.Services.AddTransient<OfertaFormPage>();
 
             return builder.Build();
         }

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:PintagAPP.Presentacion.ViewModels"
+             x:Class="PintagAPP.Presentacion.Views.OfertaFormPage"
+             x:DataType="vm:OfertaFormViewModel"
+             Title="Oferta">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="10">
+
+            <Label Text="Tipo" FontSize="12" TextColor="Gray" />
+            <Picker ItemsSource="{Binding Tipos}" SelectedItem="{Binding TipoSeleccionado}" />
+
+            <Label Text="Categoría" FontSize="12" TextColor="Gray" />
+            <Picker Title="Elige una categoría" ItemsSource="{Binding Categorias}"
+                    SelectedItem="{Binding CategoriaSeleccionada}" />
+
+            <Label Text="Título" FontSize="12" TextColor="Gray" />
+            <Entry Placeholder="Ej.: Pan de brioche / Mantenimiento de PC" MaxLength="60" Text="{Binding Titulo}" />
+
+            <Label Text="Descripción" FontSize="12" TextColor="Gray" />
+            <Editor Placeholder="Detalles, horarios, cómo trabajas…" MaxLength="500"
+                    AutoSize="TextChanges" HeightRequest="100" Text="{Binding Descripcion}" />
+
+            <!-- Precio -->
+            <HorizontalStackLayout Spacing="6">
+                <CheckBox IsChecked="{Binding AConvenir}" />
+                <Label Text="Precio a convenir" VerticalOptions="Center" />
+            </HorizontalStackLayout>
+
+            <VerticalStackLayout IsVisible="{Binding MuestraPrecio}" Spacing="4">
+                <Label Text="Precio referencial (USD)" FontSize="12" TextColor="Gray" />
+                <Entry Placeholder="Ej.: 1.00" Keyboard="Numeric" Text="{Binding PrecioTexto}" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout IsVisible="{Binding MuestraUnidades}" Spacing="4">
+                <Label Text="¿Cuántas unidades por ese precio? (opcional)" FontSize="12" TextColor="Gray" />
+                <Entry Placeholder="Ej.: 8  →  se mostrará &quot;8 por $1.00&quot;" Keyboard="Numeric"
+                       Text="{Binding UnidadesTexto}" />
+            </VerticalStackLayout>
+
+            <!-- Fotos -->
+            <Label Text="Fotos (máximo 5). Toca una para quitarla." FontSize="12" TextColor="Gray" />
+            <CollectionView ItemsSource="{Binding Fotos}" HeightRequest="90"
+                            SelectionMode="Single" SelectedItem="{Binding FotoSeleccionada}">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:FotoItem">
+                        <Border WidthRequest="85" HeightRequest="85" StrokeShape="RoundRectangle 8" Stroke="LightGray">
+                            <Image Source="{Binding Imagen}" Aspect="AspectFill" />
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <HorizontalStackLayout Spacing="10" IsVisible="{Binding PuedeAgregarFoto}">
+                <Button Text="📷 Tomar foto" Command="{Binding TomarFotoCommand}" />
+                <Button Text="🖼️ Galería" Command="{Binding ElegirFotoCommand}" />
+            </HorizontalStackLayout>
+
+            <!-- Activa / pausada -->
+            <HorizontalStackLayout Spacing="8">
+                <Switch IsToggled="{Binding Activa}" />
+                <Label Text="Oferta activa (visible para la comunidad)" VerticalOptions="Center" />
+            </HorizontalStackLayout>
+
+            <Label Text="{Binding Mensaje}" TextColor="Red" HorizontalTextAlignment="Center"
+                   IsVisible="{Binding MensajeEsError}" />
+            <ActivityIndicator IsRunning="{Binding EstaOcupado}" IsVisible="{Binding EstaOcupado}" />
+
+            <Button Text="💾 Guardar oferta" Command="{Binding GuardarCommand}" />
+            <Button Text="🗑️ Eliminar oferta" Command="{Binding EliminarCommand}"
+                    IsVisible="{Binding EsEdicion}" BackgroundColor="#C62828" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -59,4 +59,26 @@ namespace PintagAPP.Infraestructura.Supabase
         [JsonPropertyName("imagen_url")] public string? ImagenUrl { get; set; }
         [JsonPropertyName("fecha_publicacion")] public DateTimeOffset FechaPublicacion { get; set; }
     }
+    public class FotoOfertaDto
+    {
+        [JsonPropertyName("id")] public long Id { get; set; }
+        [JsonPropertyName("url")] public string Url { get; set; } = "";
+        [JsonPropertyName("orden")] public int Orden { get; set; }
+    }
+    public class OfertaDto
+    {
+        [JsonPropertyName("id")] public long Id { get; set; }
+        [JsonPropertyName("perfil_id")] public long PerfilId { get; set; }
+        [JsonPropertyName("posicion")] public int Posicion { get; set; }
+        [JsonPropertyName("categoria_id")] public long CategoriaId { get; set; }
+        [JsonPropertyName("tipo")] public string Tipo { get; set; } = "";
+        [JsonPropertyName("titulo")] public string Titulo { get; set; } = "";
+        [JsonPropertyName("descripcion")] public string Descripcion { get; set; } = "";
+        [JsonPropertyName("unidades_por_precio")] public int? UnidadesPorPrecio { get; set; }
+        [JsonPropertyName("precio")] public decimal? Precio { get; set; }
+        [JsonPropertyName("a_convenir")] public bool AConvenir { get; set; }
+        [JsonPropertyName("activa")] public bool Activa { get; set; }
+        [JsonPropertyName("oferta_fotos")] public List<FotoOfertaDto>? Fotos { get; set; }
+    }
+
 }

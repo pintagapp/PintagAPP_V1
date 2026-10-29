@@ -23,6 +23,7 @@
             <Label Text="Panel de administración: próximamente" TextColor="Gray" IsVisible="{Binding EsAdmin}" />
             <Button Text="🏪 Mi negocio: ofrecer mis servicios o productos"
                     Command="{Binding IrAMiNegocioCommand}" />
+            <Button Text="📦 Mis ofertas" Command="{Binding IrAMisOfertasCommand}" />
             <Button Text="Cerrar sesión" Command="{Binding CerrarSesionCommand}" BackgroundColor="Gray" />
         </VerticalStackLayout>
 
