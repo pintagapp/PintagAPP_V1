@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:PintagAPP.Presentacion.ViewModels"
+             xmlns:dominio="clr-namespace:PintagAPP.Dominio.Entidades"
+             x:Class="PintagAPP.Presentacion.Views.RevisarPerfilPage"
+             x:DataType="vm:RevisarPerfilViewModel"
+             Title="Revisar perfil">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="16" Spacing="12">
+
+                <ActivityIndicator IsRunning="{Binding EstaCargando}" IsVisible="{Binding EstaCargando}" />
+
+                <!-- Datos del perfil -->
+                <VerticalStackLayout Spacing="8" IsVisible="{Binding HayDatos}">
+                    <Border WidthRequest="120" HeightRequest="120" HorizontalOptions="Center"
+                            StrokeShape="RoundRectangle 60" Stroke="Transparent" BackgroundColor="LightGray">
+                        <Grid>
+                            <Label Text="👤" FontSize="48" HorizontalOptions="Center" VerticalOptions="Center" />
+                            <Image Source="{Binding FotoUrl}" Aspect="AspectFill" IsVisible="{Binding TieneFoto}" />
+                        </Grid>
+                    </Border>
+
+                    <Label Text="{Binding Nombre}" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center" />
+                    <Label Text="{Binding Negocio}" IsVisible="{Binding TieneNegocio}" FontSize="16" HorizontalOptions="Center" />
+                    <Label Text="{Binding EstadoTexto}" FontSize="14" HorizontalOptions="Center" />
+
+                    <Border Padding="12" Stroke="Transparent" StrokeShape="RoundRectangle 12"
+                            BackgroundColor="{AppThemeBinding Light=#F2F6FA, Dark=#2A2A2A}">
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="{Binding Telefono, StringFormat='📞 {0}'}" FontSize="15" />
+                            <Label Text="{Binding Barrio, StringFormat='📍 {0}'}" FontSize="15" />
+                            <Label Text="Descripción" FontSize="13" TextColor="Gray" Margin="0,6,0,0" />
+                            <Label Text="{Binding Descripcion}" FontSize="15" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Ofertas -->
+                    <Label Text="{Binding OfertasTexto}" FontSize="18" FontAttributes="Bold" Margin="0,8,0,0" />
+
+                    <VerticalStackLayout Spacing="10" BindableLayout.ItemsSource="{Binding Ofertas}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="dominio:Oferta">
+                                <Border Padding="12" Stroke="Transparent" StrokeShape="RoundRectangle 12"
+                                        BackgroundColor="{AppThemeBinding Light=#F2F6FA, Dark=#2A2A2A}">
+                                    <VerticalStackLayout Spacing="4">
+                                        <Label Text="{Binding Titulo}" FontSize="16" FontAttributes="Bold" />
+                                        <Label Text="{Binding Tipo}" FontSize="12" TextColor="Gray" />
+                                        <Label Text="{Binding TextoPrecio}" FontSize="15" TextColor="Green" FontAttributes="Bold" />
+                                        <Label Text="{Binding Descripcion}" FontSize="14" />
+                                        <Label Text="⏸️ Pausada por el oferente" FontSize="12" TextColor="Gray">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding Activa}" Value="True">
+                                                    <Setter Property="IsVisible" Value="False" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+
+                                        <!-- Fotos de la oferta -->
+                                        <ScrollView Orientation="Horizontal" Margin="0,6,0,0">
+                                            <HorizontalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Fotos}">
+                                                <BindableLayout.ItemTemplate>
+                                                    <DataTemplate x:DataType="dominio:FotoOferta">
+                                                        <Border WidthRequest="110" HeightRequest="110" Stroke="Transparent"
+                                                                StrokeShape="RoundRectangle 8" BackgroundColor="LightGray">
+                                                            <Image Source="{Binding Url}" Aspect="AspectFill" />
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </BindableLayout.ItemTemplate>
+                                            </HorizontalStackLayout>
+                                        </ScrollView>
+                                    </VerticalStackLayout>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Acciones del administrador -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="12" Padding="16,8,16,16"
+              IsVisible="{Binding HayDatos}">
+            <Button Grid.Column="0" Text="⛔ Bloquear" BackgroundColor="#C62828" TextColor="White"
+                    Command="{Binding BloquearCommand}" />
+            <Button Grid.Column="1" Text="✅ Aprobar" BackgroundColor="#2E7D32" TextColor="White"
+                    Command="{Binding AprobarCommand}" />
+        </Grid>
+    </Grid>
+</ContentPage>

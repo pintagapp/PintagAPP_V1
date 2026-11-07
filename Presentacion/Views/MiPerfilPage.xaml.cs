@@ -12,10 +12,10 @@ namespace PintagAPP.Presentacion.Views
             BindingContext = _viewModel = viewModel;
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
-            _viewModel.Actualizar();   // refleja si se inició o cerró sesión
+            await _viewModel.ActualizarAsync();   // refleja si se inició o cerró sesión y los pendientes del admin
         }
     }
 }

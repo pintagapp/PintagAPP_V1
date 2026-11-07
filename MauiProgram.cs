@@ -46,6 +46,7 @@ namespace PintagAPP
             builder.Services.AddTransient<ListarNoticias>();
             builder.Services.AddTransient<GestionarMiPerfil>();
             builder.Services.AddTransient<GestionarMisOfertas>();
+            builder.Services.AddTransient<ModerarPerfiles>();
 
             // Presentación
             builder.Services.AddTransient<RegistroViewModel>();
@@ -65,6 +66,10 @@ namespace PintagAPP
             builder.Services.AddTransient<MisOfertasPage>();
             builder.Services.AddTransient<OfertaFormViewModel>();
             builder.Services.AddTransient<OfertaFormPage>();
+            builder.Services.AddTransient<PanelAdminViewModel>();
+            builder.Services.AddTransient<PanelAdminPage>();
+            builder.Services.AddTransient<RevisarPerfilViewModel>();
+            builder.Services.AddTransient<RevisarPerfilPage>();
 
             return builder.Build();
         }

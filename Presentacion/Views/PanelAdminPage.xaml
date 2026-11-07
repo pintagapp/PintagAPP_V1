@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:PintagAPP.Presentacion.ViewModels"
+             x:Class="PintagAPP.Presentacion.Views.PanelAdminPage"
+             x:DataType="vm:PanelAdminViewModel"
+             Title="Panel de administración">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="16" RowSpacing="12">
+
+        <VerticalStackLayout Grid.Row="0" Spacing="6">
+            <Label Text="Perfiles pendientes de revisión" FontSize="20" FontAttributes="Bold" />
+            <Label Text="{Binding Aviso}" IsVisible="{Binding TieneAviso}" FontSize="14" TextColor="Gray" />
+            <ActivityIndicator IsRunning="{Binding EstaCargando}" IsVisible="{Binding EstaCargando}" />
+        </VerticalStackLayout>
+
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Pendientes}"
+                        SelectionMode="Single" SelectedItem="{Binding PerfilSeleccionado}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="vm:PerfilPendienteResumen">
+                    <Border Margin="0,6" Padding="10" Stroke="Transparent" StrokeShape="RoundRectangle 12"
+                            BackgroundColor="{AppThemeBinding Light=#F2F6FA, Dark=#2A2A2A}">
+                        <Grid ColumnDefinitions="70,*" ColumnSpacing="12">
+                            <Border Grid.Column="0" WidthRequest="70" HeightRequest="70"
+                                    StrokeShape="RoundRectangle 35" Stroke="Transparent" BackgroundColor="LightGray">
+                                <Grid>
+                                    <Label Text="👤" FontSize="30" HorizontalOptions="Center" VerticalOptions="Center" />
+                                    <Image Source="{Binding FotoUrl}" Aspect="AspectFill" IsVisible="{Binding TieneFoto}" />
+                                </Grid>
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                <Label Text="{Binding Nombre}" FontSize="16" FontAttributes="Bold" />
+                                <Label Text="{Binding Negocio}" IsVisible="{Binding TieneNegocio}" FontSize="14" />
+                                <Label Text="{Binding Barrio, StringFormat='📍 {0}'}" FontSize="13" TextColor="Gray" />
+                                <Label Text="{Binding FechaTexto}" FontSize="12" TextColor="Gray" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Button Grid.Row="2" Text="🔄 Actualizar lista" Command="{Binding RecargarCommand}" />
+    </Grid>
+</ContentPage>

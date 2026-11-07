@@ -1,8 +1,7 @@
-﻿using Android.Net.Sip;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.VisualBasic;
 using PintagAPP.CasosUso.Cuenta;
+using PintagAPP.CasosUso.Perfiles;
 
 namespace PintagAPP.Presentacion.ViewModels
 {
@@ -10,24 +9,42 @@ namespace PintagAPP.Presentacion.ViewModels
     {
         private readonly SesionActual _sesion;
         private readonly ControlSesion _controlSesion;
+        private readonly ModerarPerfiles _moderar;
 
-        public MiPerfilViewModel(SesionActual sesion, ControlSesion controlSesion)
+        public MiPerfilViewModel(SesionActual sesion, ControlSesion controlSesion, ModerarPerfiles moderar)
         {
             _sesion = sesion;
             _controlSesion = controlSesion;
+            _moderar = moderar;
         }
 
         [ObservableProperty] private bool conSesion;
         [ObservableProperty] private bool sinSesion = true;
         [ObservableProperty] private string nombre = "";
         [ObservableProperty] private bool esAdmin;
+        [ObservableProperty] private string textoPanelAdmin = "🛡️ Panel de administración";
 
-        public void Actualizar()
+        public async Task ActualizarAsync()
         {
             ConSesion = _sesion.EstaIniciada;
             SinSesion = !_sesion.EstaIniciada;
             Nombre = _sesion.Usuario?.NombresCompletos ?? "";
             EsAdmin = _sesion.Usuario?.EsAdmin ?? false;
+
+            if (!EsAdmin) return;
+
+            // Muestra cuántos perfiles esperan revisión
+            try
+            {
+                int pendientes = await _moderar.ContarPendientesAsync();
+                TextoPanelAdmin = pendientes > 0
+                    ? $"🛡️ Panel de administración ({pendientes} pendientes)"
+                    : "🛡️ Panel de administración";
+            }
+            catch (Exception)
+            {
+                TextoPanelAdmin = "🛡️ Panel de administración";
+            }
         }
 
         [RelayCommand]
@@ -40,17 +57,25 @@ namespace PintagAPP.Presentacion.ViewModels
         private async Task CerrarSesionAsync()
         {
             await _controlSesion.CerrarAsync();
-            Actualizar();
+            await ActualizarAsync();
         }
+
         [RelayCommand]
         private async Task IrAMiNegocioAsync()
         {
             await Shell.Current.GoToAsync("OfrecerPage");
         }
+
         [RelayCommand]
         private async Task IrAMisOfertasAsync()
         {
             await Shell.Current.GoToAsync("MisOfertasPage");
+        }
+
+        [RelayCommand]
+        private async Task IrAPanelAdminAsync()
+        {
+            await Shell.Current.GoToAsync("PanelAdminPage");
         }
     }
 }

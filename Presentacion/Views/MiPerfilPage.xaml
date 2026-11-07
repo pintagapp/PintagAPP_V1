@@ -20,7 +20,8 @@
         <VerticalStackLayout Spacing="12" IsVisible="{Binding ConSesion}">
             <Label Text="{Binding Nombre}" FontSize="22" FontAttributes="Bold" />
             <Label Text="Administrador" TextColor="Green" IsVisible="{Binding EsAdmin}" />
-            <Label Text="Panel de administración: próximamente" TextColor="Gray" IsVisible="{Binding EsAdmin}" />
+            <Button Text="{Binding TextoPanelAdmin}" Command="{Binding IrAPanelAdminCommand}"
+                    IsVisible="{Binding EsAdmin}" BackgroundColor="#2E7D32" TextColor="White" />
             <Button Text="🏪 Mi negocio: ofrecer mis servicios o productos"
                     Command="{Binding IrAMiNegocioCommand}" />
             <Button Text="📦 Mis ofertas" Command="{Binding IrAMisOfertasCommand}" />

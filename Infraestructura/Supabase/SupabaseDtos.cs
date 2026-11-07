@@ -41,6 +41,8 @@ namespace PintagAPP.Infraestructura.Supabase
         [JsonPropertyName("foto_url")] public string? FotoUrl { get; set; }
         [JsonPropertyName("estado")] public string Estado { get; set; } = "";
         [JsonPropertyName("motivo_estado")] public string? MotivoEstado { get; set; }
+        [JsonPropertyName("creado_en")] public DateTimeOffset CreadoEn { get; set; }
+        [JsonPropertyName("barrios")] public BarrioDto? Barrio { get; set; }   // Integrado: barrios(nombre)
     }
     // Fila de la tabla categorias
     public class CategoriaDto

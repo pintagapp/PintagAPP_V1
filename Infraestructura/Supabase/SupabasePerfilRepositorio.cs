@@ -7,7 +7,8 @@ namespace PintagAPP.Infraestructura.Supabase
     public class SupabasePerfilRepositorio : IPerfilRepositorio
     {
         private const string Columnas =
-            "id,usuario_id,nombre_persona,nombre_negocio,telefono,barrio_id,descripcion,foto_url,estado,motivo_estado";
+    "id,usuario_id,nombre_persona,nombre_negocio,telefono,barrio_id,descripcion,foto_url,estado,motivo_estado," +
+    "creado_en,barrios(nombre)";
 
         private readonly SupabaseHttp _http;
 
@@ -64,6 +65,47 @@ namespace PintagAPP.Infraestructura.Supabase
             return guardado;
         }
 
+        // ---------- ADMINISTRADOR ----------
+        // RLS: el admin puede ver y editar todos los perfiles (es_admin()).
+        public async Task<List<PerfilOferente>> ObtenerPorEstadoAsync(string estado)
+        {
+            var filas = await _http.Cliente.GetFromJsonAsync<List<PerfilDto>>(
+                $"rest/v1/perfiles_oferente?estado=eq.{estado}&select={Columnas}&order=creado_en.asc");
+
+            return (filas ?? new List<PerfilDto>()).Select(Mapear).ToList();
+        }
+
+        public async Task<PerfilOferente?> ObtenerPorIdAsync(long id)
+        {
+            var filas = await _http.Cliente.GetFromJsonAsync<List<PerfilDto>>(
+                $"rest/v1/perfiles_oferente?id=eq.{id}&select={Columnas}");
+
+            var fila = filas?.FirstOrDefault();
+            return fila is null ? null : Mapear(fila);
+        }
+
+        // El trigger proteger_perfil registra revisado_por y fecha_revision
+        public async Task CambiarEstadoAsync(long id, string estado, string? motivo)
+        {
+            var solicitud = new HttpRequestMessage(HttpMethod.Patch, $"rest/v1/perfiles_oferente?id=eq.{id}")
+            {
+                Content = JsonContent.Create(new Dictionary<string, object?>
+                {
+                    ["estado"] = estado,
+                    ["motivo_estado"] = motivo
+                })
+            };
+            solicitud.Headers.Add("Prefer", "return=representation");
+
+            var respuesta = await _http.Cliente.SendAsync(solicitud);
+            respuesta.EnsureSuccessStatusCode();
+
+            // Si RLS no dejó actualizar (no es admin), PostgREST devuelve una lista vacía
+            var filas = await respuesta.Content.ReadFromJsonAsync<List<PerfilDto>>();
+            if (filas is null || filas.Count == 0 || filas[0].Estado != estado)
+                throw new InvalidOperationException("No se pudo cambiar el estado del perfil.");
+        }
+
         private static PerfilOferente Mapear(PerfilDto f) => new()
         {
             Id = f.Id,
@@ -75,7 +117,9 @@ namespace PintagAPP.Infraestructura.Supabase
             Descripcion = f.Descripcion,
             FotoUrl = f.FotoUrl,
             Estado = f.Estado,
-            MotivoEstado = f.MotivoEstado
+            MotivoEstado = f.MotivoEstado,
+            BarrioNombre = f.Barrio?.Nombre,
+            CreadoEn = f.CreadoEn
         };
     }
 }
