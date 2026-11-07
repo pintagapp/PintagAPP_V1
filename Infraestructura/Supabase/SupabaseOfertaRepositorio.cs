@@ -10,6 +10,13 @@ namespace PintagAPP.Infraestructura.Supabase
             "id,perfil_id,posicion,categoria_id,tipo,titulo,descripcion,unidades_por_precio,precio,a_convenir,activa," +
             "oferta_fotos(id,url,orden)";
 
+        // Datos públicos del oferente (sin teléfono: los visitantes sin cuenta no pueden verlo)
+        private const string ColumnasPublicas = Columnas +
+            ",perfiles_oferente!inner(id,nombre_persona,nombre_negocio,descripcion,foto_url,estado,barrios(nombre))";
+
+        // Se filtra explícitamente porque el admin, por RLS, también vería las pendientes y pausadas
+        private const string FiltroPublicas = "activa=eq.true&perfiles_oferente.estado=eq.aprobado";
+
         private readonly SupabaseHttp _http;
 
         public SupabaseOfertaRepositorio(SupabaseHttp http)
@@ -83,6 +90,24 @@ namespace PintagAPP.Infraestructura.Supabase
             respuesta.EnsureSuccessStatusCode();
         }
 
+        // ---------- PÚBLICO ----------
+        public async Task<List<Oferta>> ObtenerPublicasPorCategoriaAsync(long categoriaId)
+        {
+            var filas = await _http.Cliente.GetFromJsonAsync<List<OfertaDto>>(
+                $"rest/v1/ofertas?categoria_id=eq.{categoriaId}&{FiltroPublicas}&select={ColumnasPublicas}&order=id.desc");
+
+            return (filas ?? new List<OfertaDto>()).Select(Mapear).ToList();
+        }
+
+        public async Task<Oferta?> ObtenerPublicaAsync(long ofertaId)
+        {
+            var filas = await _http.Cliente.GetFromJsonAsync<List<OfertaDto>>(
+                $"rest/v1/ofertas?id=eq.{ofertaId}&{FiltroPublicas}&select={ColumnasPublicas}");
+
+            var fila = filas?.FirstOrDefault();
+            return fila is null ? null : Mapear(fila);
+        }
+
         private static Oferta Mapear(OfertaDto f) => new()
         {
             Id = f.Id,
@@ -96,6 +121,16 @@ namespace PintagAPP.Infraestructura.Supabase
             Precio = f.Precio,
             AConvenir = f.AConvenir,
             Activa = f.Activa,
+            Oferente = f.Perfil is null ? null : new PerfilOferente
+            {
+                Id = f.Perfil.Id,
+                NombrePersona = f.Perfil.NombrePersona,
+                NombreNegocio = f.Perfil.NombreNegocio,
+                Descripcion = f.Perfil.Descripcion,
+                FotoUrl = f.Perfil.FotoUrl,
+                Estado = f.Perfil.Estado,
+                BarrioNombre = f.Perfil.Barrio?.Nombre
+            },
             Fotos = (f.Fotos ?? new List<FotoOfertaDto>())
                     .OrderBy(x => x.Orden)
                     .Select(x => new FotoOferta { Id = x.Id, Url = x.Url, Orden = x.Orden })

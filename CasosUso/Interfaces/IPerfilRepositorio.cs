@@ -6,6 +6,7 @@ namespace PintagAPP.CasosUso.Interfaces
     {
         Task<PerfilOferente?> ObtenerPorUsuarioAsync(Guid usuarioId);
         Task<PerfilOferente> GuardarAsync(PerfilOferente perfil);
+        Task<string?> ObtenerTelefonoAsync(long perfilId);
 
         // ---- Administrador ----
         Task<List<PerfilOferente>> ObtenerPorEstadoAsync(string estado);

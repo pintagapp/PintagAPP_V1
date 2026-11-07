@@ -81,6 +81,7 @@ namespace PintagAPP.Infraestructura.Supabase
         [JsonPropertyName("a_convenir")] public bool AConvenir { get; set; }
         [JsonPropertyName("activa")] public bool Activa { get; set; }
         [JsonPropertyName("oferta_fotos")] public List<FotoOfertaDto>? Fotos { get; set; }
+        [JsonPropertyName("perfiles_oferente")] public PerfilDto? Perfil { get; set; }   // embebido en consultas públicas
     }
 
 }

@@ -16,5 +16,8 @@
         public DateTimeOffset CreadoEn { get; set; }
 
         public bool EsNuevo => Id == 0;
+
+        // Cómo se muestra al público: el negocio si tiene, si no el nombre de la persona
+        public string NombreVisible => string.IsNullOrWhiteSpace(NombreNegocio) ? NombrePersona : NombreNegocio;
     }
 }

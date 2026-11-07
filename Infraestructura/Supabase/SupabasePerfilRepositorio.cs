@@ -64,6 +64,14 @@ namespace PintagAPP.Infraestructura.Supabase
             perfil.Estado = guardado.Estado;
             return guardado;
         }
+        // Solo con sesión iniciada: los visitantes sin cuenta no tienen permiso sobre la columna teléfono
+        public async Task<string?> ObtenerTelefonoAsync(long perfilId)
+        {
+            var filas = await _http.Cliente.GetFromJsonAsync<List<PerfilDto>>(
+                $"rest/v1/perfiles_oferente?id=eq.{perfilId}&select=id,telefono");
+
+            return filas?.FirstOrDefault()?.Telefono;
+        }
 
         // ---------- ADMINISTRADOR ----------
         // RLS: el admin puede ver y editar todos los perfiles (es_admin()).

@@ -26,6 +26,7 @@ namespace PintagAPP.Presentacion.ViewModels
         [ObservableProperty] private string saludo = "¡Hola, Píntag!";
         [ObservableProperty] private bool estaCargando;
         [ObservableProperty] private string mensaje = "";
+        [ObservableProperty] private CategoriaItem? categoriaSeleccionada;
 
         public async Task CargarAsync()
         {
@@ -51,6 +52,14 @@ namespace PintagAPP.Presentacion.ViewModels
             {
                 EstaCargando = false;
             }
+        }
+        // Al tocar una categoría se abren sus ofertas
+        async partial void OnCategoriaSeleccionadaChanged(CategoriaItem? value)
+        {
+            if (value is null) return;
+            CategoriaSeleccionada = null;   // limpia la selección para poder volver a tocarla
+            await Shell.Current.GoToAsync("OfertasCategoriaPage",
+                new Dictionary<string, object> { ["id"] = value.Id, ["nombre"] = value.Nombre });
         }
 
         // El campo "icono" de la BD se traduce aquí a un dibujo (es un tema de presentación)

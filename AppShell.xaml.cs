@@ -14,6 +14,8 @@ namespace PintagAPP
             Routing.RegisterRoute("OfertaFormPage", typeof(OfertaFormPage));
             Routing.RegisterRoute("PanelAdminPage", typeof(PanelAdminPage));
             Routing.RegisterRoute("RevisarPerfilPage", typeof(RevisarPerfilPage));
+            Routing.RegisterRoute("OfertasCategoriaPage", typeof(OfertasCategoriaPage));
+            Routing.RegisterRoute("DetalleOfertaPage", typeof(DetalleOfertaPage));
         }
     }
 }

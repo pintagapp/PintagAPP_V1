@@ -1,0 +1,78 @@
+﻿using PintagAPP.CasosUso.Cuenta;
+using PintagAPP.CasosUso.Interfaces;
+using PintagAPP.Dominio.Entidades;
+
+namespace PintagAPP.CasosUso.Ofertas
+{
+    public record DatosContacto(string Telefono, string NumeroWhatsApp);
+
+    // Lo que hace cualquier persona: ver ofertas por categoría, su detalle y contactar al oferente
+    public class ExplorarOfertas
+    {
+        public const string CanalWhatsApp = "whatsapp";
+        public const string CanalLlamada = "llamada";
+
+        private readonly IOfertaRepositorio _ofertas;
+        private readonly IPerfilRepositorio _perfiles;
+        private readonly IContactoRepositorio _contactos;
+        private readonly SesionActual _sesion;
+
+        public ExplorarOfertas(IOfertaRepositorio ofertas, IPerfilRepositorio perfiles,
+                               IContactoRepositorio contactos, SesionActual sesion)
+        {
+            _ofertas = ofertas;
+            _perfiles = perfiles;
+            _contactos = contactos;
+            _sesion = sesion;
+        }
+
+        public bool HaySesion => _sesion.EstaIniciada;
+
+        public Task<List<Oferta>> ListarPorCategoriaAsync(long categoriaId) =>
+            _ofertas.ObtenerPublicasPorCategoriaAsync(categoriaId);
+
+        public Task<Oferta?> ObtenerDetalleAsync(long ofertaId) =>
+            _ofertas.ObtenerPublicaAsync(ofertaId);
+
+        // ¿La oferta es del usuario que está viendo? (para no mostrarle los botones de contacto)
+        public async Task<bool> EsMiaAsync(Oferta oferta)
+        {
+            if (!_sesion.EstaIniciada) return false;
+            var miPerfil = await _perfiles.ObtenerPorUsuarioAsync(_sesion.Usuario!.Id);
+            return miPerfil?.Id == oferta.PerfilId;
+        }
+
+        // Obtiene el teléfono (solo con sesión) y registra el contacto
+        public async Task<(Resultado Resultado, DatosContacto? Datos)> ContactarAsync(Oferta oferta, string canal)
+        {
+            if (!_sesion.EstaIniciada)
+                return (Resultado.Error("Inicia sesión para contactar al oferente."), null);
+
+            try
+            {
+                var telefono = await _perfiles.ObtenerTelefonoAsync(oferta.PerfilId);
+                if (string.IsNullOrWhiteSpace(telefono))
+                    return (Resultado.Error("No se encontró el teléfono del oferente."), null);
+
+                await _contactos.RegistrarAsync(_sesion.Usuario!.Id, oferta.PerfilId, canal);
+                return (Resultado.Exito(), new DatosContacto(telefono.Trim(), NumeroInternacional(telefono)));
+            }
+            catch (Exception)
+            {
+                return (Resultado.Error("No se pudo obtener el contacto. Revisa tu conexión."), null);
+            }
+        }
+
+        public static string MensajeWhatsApp(Oferta oferta) =>
+            $"Hola, vi tu oferta «{oferta.Titulo}» en Píntag Conecta y quisiera más información.";
+
+        // 0991234567 → 593991234567   |   +593 99 123 4567 → 593991234567
+        public static string NumeroInternacional(string telefono)
+        {
+            var digitos = new string(telefono.Where(char.IsDigit).ToArray());
+            if (digitos.StartsWith("593")) return digitos;
+            if (digitos.StartsWith("0")) return "593" + digitos.Substring(1);
+            return "593" + digitos;
+        }
+    }
+}

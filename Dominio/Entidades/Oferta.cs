@@ -16,9 +16,11 @@ namespace PintagAPP.Dominio.Entidades
         public bool AConvenir { get; set; }
         public bool Activa { get; set; } = true;
         public List<FotoOferta> Fotos { get; set; } = new();
+        public PerfilOferente? Oferente { get; set; }   // solo lectura: viene en las consultas públicas
 
         public bool EsNueva => Id == 0;
         public bool EsProducto => Tipo == "producto";
+        public string? FotoPrincipal => Fotos.FirstOrDefault()?.Url;
 
         // Regla de presentación del precio: "8 por $1.00", "$15.00" o "A convenir"
         public string TextoPrecio

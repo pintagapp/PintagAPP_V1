@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:PintagAPP.Presentacion.ViewModels"
+             xmlns:dominio="clr-namespace:PintagAPP.Dominio.Entidades"
+             x:Class="PintagAPP.Presentacion.Views.DetalleOfertaPage"
+             x:DataType="vm:DetalleOfertaViewModel"
+             Title="Detalle">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Spacing="12" Padding="0,0,0,16">
+
+                <ActivityIndicator IsRunning="{Binding EstaCargando}" IsVisible="{Binding EstaCargando}" Margin="0,20" />
+
+                <VerticalStackLayout Spacing="12" IsVisible="{Binding HayDatos}">
+
+                    <!-- Fotos: se deslizan -->
+                    <Grid HeightRequest="280" BackgroundColor="LightGray">
+                        <Label Text="📷 Sin fotos" FontSize="18" TextColor="Gray"
+                               HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding SinFotos}" />
+                        <CarouselView ItemsSource="{Binding Fotos}" IndicatorView="indicador"
+                                      IsVisible="{Binding TieneFotos}" Loop="False">
+                            <CarouselView.ItemTemplate>
+                                <DataTemplate x:DataType="dominio:FotoOferta">
+                                    <Image Source="{Binding Url}" Aspect="AspectFill" />
+                                </DataTemplate>
+                            </CarouselView.ItemTemplate>
+                        </CarouselView>
+                    </Grid>
+                    <IndicatorView x:Name="indicador" IndicatorColor="LightGray" SelectedIndicatorColor="#2E7D32"
+                                   HorizontalOptions="Center" IsVisible="{Binding TieneFotos}" />
+
+                    <!-- Datos de la oferta -->
+                    <VerticalStackLayout Padding="16,0" Spacing="6">
+                        <Label Text="{Binding Titulo}" FontSize="22" FontAttributes="Bold" />
+                        <Label Text="{Binding Precio}" FontSize="20" TextColor="Green" FontAttributes="Bold" />
+                        <Label Text="{Binding TipoTexto}" FontSize="13" TextColor="Gray" />
+                        <Label Text="{Binding Descripcion}" FontSize="15" Margin="0,6,0,0" />
+                    </VerticalStackLayout>
+
+                    <!-- Oferente -->
+                    <Border Margin="16,8,16,0" Padding="12" Stroke="Transparent" StrokeShape="RoundRectangle 12"
+                            BackgroundColor="{AppThemeBinding Light=#F2F6FA, Dark=#2A2A2A}">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Ofrecido por" FontSize="13" TextColor="Gray" />
+                            <Grid ColumnDefinitions="60,*" ColumnSpacing="12">
+                                <Border Grid.Column="0" WidthRequest="60" HeightRequest="60"
+                                        StrokeShape="RoundRectangle 30" Stroke="Transparent" BackgroundColor="LightGray">
+                                    <Grid>
+                                        <Label Text="👤" FontSize="26" HorizontalOptions="Center" VerticalOptions="Center" />
+                                        <Image Source="{Binding FotoOferente}" Aspect="AspectFill"
+                                               IsVisible="{Binding TieneFotoOferente}" />
+                                    </Grid>
+                                </Border>
+                                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                    <Label Text="{Binding NombreOferente}" FontSize="16" FontAttributes="Bold" />
+                                    <Label Text="{Binding Barrio, StringFormat='📍 {0}'}" FontSize="13" TextColor="Gray" />
+                                </VerticalStackLayout>
+                            </Grid>
+                            <Label Text="{Binding DescripcionOferente}" FontSize="14" />
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Contacto -->
+        <VerticalStackLayout Grid.Row="1" Padding="16,8,16,16" IsVisible="{Binding HayDatos}">
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12" IsVisible="{Binding PuedeContactar}">
+                <Button Grid.Column="0" Text="📞 Llamar" BackgroundColor="#1565C0" TextColor="White"
+                        Command="{Binding LlamarCommand}" />
+                <Button Grid.Column="1" Text="💬 WhatsApp" BackgroundColor="#25D366" TextColor="White"
+                        Command="{Binding WhatsAppCommand}" />
+            </Grid>
+            <Label Text="Esta es tu oferta" IsVisible="{Binding EsMia}" FontSize="15" TextColor="Gray"
+                   HorizontalOptions="Center" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

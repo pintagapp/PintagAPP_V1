@@ -51,7 +51,8 @@
             <ActivityIndicator IsRunning="{Binding EstaCargando}" IsVisible="{Binding EstaCargando}" />
             <Label Text="{Binding Mensaje}" TextColor="Red" />
 
-            <CollectionView ItemsSource="{Binding Categorias}" SelectionMode="None">
+            <CollectionView ItemsSource="{Binding Categorias}"
+                            SelectionMode="Single" SelectedItem="{Binding CategoriaSeleccionada}">
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout Orientation="Vertical" Span="3" />
                 </CollectionView.ItemsLayout>
