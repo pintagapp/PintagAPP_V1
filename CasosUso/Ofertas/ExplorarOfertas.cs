@@ -43,6 +43,18 @@ namespace PintagAPP.CasosUso.Ofertas
             return oferta;
         }
 
+        public const int MinimoBusqueda = 3;
+
+        public async Task<List<Oferta>> BuscarAsync(string? texto)
+        {
+            texto = texto?.Trim() ?? "";
+            if (texto.Length < MinimoBusqueda) return new List<Oferta>();
+
+            var ofertas = await _ofertas.BuscarPublicasAsync(texto);
+            await AgregarCalificacionesAsync(ofertas);
+            return ofertas;
+        }
+
         // Completa el promedio de estrellas de cada oferente (una sola consulta para toda la lista)
         private async Task AgregarCalificacionesAsync(List<Oferta> ofertas)
         {

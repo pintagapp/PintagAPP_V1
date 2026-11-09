@@ -60,6 +60,7 @@ namespace PintagAPP
             builder.Services.AddTransient<LoginPage>();
             builder.Services.AddTransient<InicioViewModel>();
             builder.Services.AddTransient<InicioPage>();
+            builder.Services.AddTransient<BuscarViewModel>();
             builder.Services.AddTransient<BuscarPage>();
             builder.Services.AddTransient<NoticiasViewModel>();
             builder.Services.AddTransient<NoticiasPage>();

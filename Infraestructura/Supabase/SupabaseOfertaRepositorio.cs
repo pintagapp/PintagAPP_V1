@@ -107,7 +107,28 @@ namespace PintagAPP.Infraestructura.Supabase
             var fila = filas?.FirstOrDefault();
             return fila is null ? null : Mapear(fila);
         }
+        // Busca en título y descripción de la oferta, y en el nombre del negocio (2 consultas que se unen)
+        public async Task<List<Oferta>> BuscarPublicasAsync(string texto)
+        {
+            // Quita caracteres que rompen el filtro de PostgREST
+            var limpio = new string(texto.Where(c => !",()*:\"\\".Contains(c)).ToArray()).Trim();
+            if (limpio.Length == 0) return new List<Oferta>();
+            var patron = Uri.EscapeDataString($"*{limpio}*");
 
+            var porOferta = await _http.Cliente.GetFromJsonAsync<List<OfertaDto>>(
+                $"rest/v1/ofertas?or=(titulo.ilike.{patron},descripcion.ilike.{patron})" +
+                $"&{FiltroPublicas}&select={ColumnasPublicas}&order=id.desc&limit=30");
+
+            var porNegocio = await _http.Cliente.GetFromJsonAsync<List<OfertaDto>>(
+                $"rest/v1/ofertas?perfiles_oferente.nombre_negocio=ilike.{patron}" +
+                $"&{FiltroPublicas}&select={ColumnasPublicas}&order=id.desc&limit=30");
+
+            return (porOferta ?? new List<OfertaDto>())
+                .Concat(porNegocio ?? new List<OfertaDto>())
+                .GroupBy(f => f.Id).Select(g => g.First())   // sin repetidos
+                .Select(Mapear)
+                .ToList();
+        }
         private static Oferta Mapear(OfertaDto f) => new()
         {
             Id = f.Id,

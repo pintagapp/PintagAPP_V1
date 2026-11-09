@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using PintagAPP.CasosUso.Cuenta;
 using PintagAPP.CasosUso.Ofertas;
 using PintagAPP.Infraestructura.Supabase;
+using CommunityToolkit.Mvvm.Input;
 
 namespace PintagAPP.Presentacion.ViewModels
 {
@@ -62,6 +63,12 @@ namespace PintagAPP.Presentacion.ViewModels
                 new Dictionary<string, object> { ["id"] = value.Id, ["nombre"] = value.Nombre });
         }
 
+        // La barra de búsqueda del inicio lleva a la pestaña Buscar
+        [RelayCommand]
+        private async Task IrABuscarAsync()
+        {
+            await Shell.Current.GoToAsync("//BuscarPage");
+        }
         // El campo "icono" de la BD se traduce aquí a un dibujo (es un tema de presentación)
         private static string EmojiDe(string icono) => icono switch
         {

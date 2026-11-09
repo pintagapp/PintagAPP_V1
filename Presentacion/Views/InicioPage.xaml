@@ -44,7 +44,12 @@
                 </VerticalStackLayout>
 
             </Grid>
-            <SearchBar Placeholder="Buscar servicios o productos" IsEnabled="False" />
+            <Border Padding="14,10" Stroke="LightGray" StrokeShape="RoundRectangle 24">
+                <Label Text="🔍  Buscar servicios o productos" FontSize="15" TextColor="Gray" />
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding IrABuscarCommand}" />
+                </Border.GestureRecognizers>
+            </Border>
 
             <Label Text="Categorías" FontSize="18" FontAttributes="Bold" />
 
