@@ -68,8 +68,8 @@
                                 BackgroundColor="{AppThemeBinding Light=#F2F6FA, Dark=#2A2A2A}">
                             <VerticalStackLayout Spacing="4">
                                 <Label Text="{Binding Emoji}" FontSize="30" HorizontalOptions="Center" />
-                                <Label Text="{Binding Nombre}" FontSize="12" MaxLines="2"
-                                       HorizontalTextAlignment="Center" />
+                                <Label Text="{Binding Nombre}" FontSize="12" MaxLines="3"
+                                       LineBreakMode="WordWrap" HorizontalTextAlignment="Center" />
                             </VerticalStackLayout>
                         </Border>
                     </DataTemplate>

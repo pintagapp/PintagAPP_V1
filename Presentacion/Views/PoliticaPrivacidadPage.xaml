@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PintagAPP.Presentacion.Views.PoliticaPrivacidadPage"
+             Title="Política de privacidad">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="10">
+            <Label Text="Política de privacidad de Píntag Conecta" FontSize="20" FontAttributes="Bold" />
+            <Label Text="Versión 1.0 · Resumen" FontSize="13" TextColor="Gray" />
+
+            <Label Text="Responsable" FontSize="16" FontAttributes="Bold" Margin="0,10,0,0" />
+            <Label Text="GAD Parroquial Rural de Píntag, administrador de la aplicación Píntag Conecta." FontSize="14" />
+
+            <Label Text="Qué datos recogemos" FontSize="16" FontAttributes="Bold" />
+            <Label FontSize="14" Text="• Todos: nombres completos, cédula y correo electrónico.&#10;• Oferentes: teléfono, barrio, descripción del negocio, fotos y ofertas.&#10;• Uso: contactos realizados, calificaciones y denuncias." />
+
+            <Label Text="Para qué los usamos" FontSize="16" FontAttributes="Bold" />
+            <Label FontSize="14" Text="Verificar que cada cuenta corresponde a una persona real, mostrar los negocios de la parroquia, permitir el contacto por WhatsApp o llamada, publicar calificaciones y obtener estadísticas generales del uso de la app." />
+
+            <Label Text="Qué es público" FontSize="16" FontAttributes="Bold" />
+            <Label FontSize="14" Text="• Nombre o negocio, barrio, descripción, fotos y ofertas de los oferentes aprobados.&#10;• Las opiniones se publican como «Usuario de Píntag», sin nombre.&#10;• El teléfono solo lo ven usuarios registrados.&#10;• La cédula y el correo nunca se publican." />
+
+            <Label Text="Dónde se guardan" FontSize="16" FontAttributes="Bold" />
+            <Label FontSize="14" Text="En servidores en la nube (Supabase), protegidos con reglas de acceso por usuario." />
+
+            <Label Text="Tus derechos (LOPDP)" FontSize="16" FontAttributes="Bold" />
+            <Label FontSize="14" Text="Puedes acceder, corregir y eliminar tus datos. Para eliminarlos todos usa «Mi cuenta → Eliminar mi cuenta». Para otras solicitudes, comunícate con el GAD Parroquial de Píntag." />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

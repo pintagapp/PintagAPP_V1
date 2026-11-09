@@ -127,5 +127,23 @@ namespace PintagAPP.Presentacion.ViewModels
         {
             await Shell.Current.GoToAsync("DenunciasPage");
         }
+
+        [RelayCommand]
+        private async Task IrAMiCuentaAsync()
+        {
+            await Shell.Current.GoToAsync("MiCuentaPage");
+        }
+
+        [RelayCommand]
+        private async Task IrAEstadisticasAsync()
+        {
+            await Shell.Current.GoToAsync("EstadisticasPage");
+        }
+
+        [RelayCommand]
+        private async Task IrANoticiasAdminAsync()
+        {
+            await Shell.Current.GoToAsync("AdminNoticiasPage");
+        }
     }
 }

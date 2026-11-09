@@ -6,31 +6,42 @@
              x:DataType="vm:MiPerfilViewModel"
              Title="Mi perfil">
 
-    <VerticalStackLayout Padding="24" Spacing="14">
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="12">
 
-        <!-- Sin sesión -->
-        <VerticalStackLayout Spacing="12" IsVisible="{Binding SinSesion}">
-            <Label Text="Aún no has iniciado sesión" FontSize="22" FontAttributes="Bold" />
-            <Label Text="Inicia sesión para contactar a los oferentes, calificar u ofrecer tus servicios."
-                   TextColor="Gray" />
-            <Button Text="Iniciar sesión" Command="{Binding IrALoginCommand}" />
+            <!-- Sin sesión -->
+            <VerticalStackLayout Spacing="12" IsVisible="{Binding SinSesion}">
+                <Label Text="Aún no has iniciado sesión" FontSize="22" FontAttributes="Bold" />
+                <Label Text="Inicia sesión para contactar a los oferentes, calificar u ofrecer tus servicios."
+                       TextColor="Gray" />
+                <Button Text="Iniciar sesión" Command="{Binding IrALoginCommand}" />
+            </VerticalStackLayout>
+
+            <!-- Con sesión -->
+            <VerticalStackLayout Spacing="12" IsVisible="{Binding ConSesion}">
+                <Label Text="{Binding Nombre}" FontSize="22" FontAttributes="Bold" />
+                <Label Text="Administrador" TextColor="Green" IsVisible="{Binding EsAdmin}" />
+
+                <!-- Solo administrador -->
+                <Button Text="{Binding TextoPanelAdmin}" Command="{Binding IrAPanelAdminCommand}"
+                        IsVisible="{Binding EsAdmin}" BackgroundColor="#2E7D32" TextColor="White" />
+                <Button Text="{Binding TextoDenuncias}" Command="{Binding IrADenunciasCommand}"
+                        IsVisible="{Binding EsAdmin}" BackgroundColor="#C62828" TextColor="White" />
+                <Button Text="📊 Estadísticas" Command="{Binding IrAEstadisticasCommand}"
+                        IsVisible="{Binding EsAdmin}" BackgroundColor="#00695C" TextColor="White" />
+                <Button Text="📰 Noticias" Command="{Binding IrANoticiasAdminCommand}"
+                        IsVisible="{Binding EsAdmin}" BackgroundColor="#00695C" TextColor="White" />
+
+                <!-- Todos -->
+                <Button Text="🏪 Mi negocio: ofrecer mis servicios o productos"
+                        Command="{Binding IrAMiNegocioCommand}" />
+                <Button Text="📦 Mis ofertas" Command="{Binding IrAMisOfertasCommand}" />
+                <Button Text="{Binding TextoPorCalificar}" Command="{Binding IrAPorCalificarCommand}"
+                        BackgroundColor="#F9A825" TextColor="Black" />
+                <Button Text="👤 Mi cuenta" Command="{Binding IrAMiCuentaCommand}" BackgroundColor="#455A64" />
+                <Button Text="Cerrar sesión" Command="{Binding CerrarSesionCommand}" BackgroundColor="Gray" />
+            </VerticalStackLayout>
+
         </VerticalStackLayout>
-
-        <!-- Con sesión -->
-        <VerticalStackLayout Spacing="12" IsVisible="{Binding ConSesion}">
-            <Label Text="{Binding Nombre}" FontSize="22" FontAttributes="Bold" />
-            <Label Text="Administrador" TextColor="Green" IsVisible="{Binding EsAdmin}" />
-            <Button Text="{Binding TextoPanelAdmin}" Command="{Binding IrAPanelAdminCommand}"
-                    IsVisible="{Binding EsAdmin}" BackgroundColor="#2E7D32" TextColor="White" />
-            <Button Text="{Binding TextoDenuncias}" Command="{Binding IrADenunciasCommand}"
-                    IsVisible="{Binding EsAdmin}" BackgroundColor="#C62828" TextColor="White" />
-            <Button Text="🏪 Mi negocio: ofrecer mis servicios o productos"
-                    Command="{Binding IrAMiNegocioCommand}" />
-            <Button Text="📦 Mis ofertas" Command="{Binding IrAMisOfertasCommand}" />
-            <Button Text="{Binding TextoPorCalificar}" Command="{Binding IrAPorCalificarCommand}"
-                    BackgroundColor="#F9A825" TextColor="Black" />
-            <Button Text="Cerrar sesión" Command="{Binding CerrarSesionCommand}" BackgroundColor="Gray" />
-        </VerticalStackLayout>
-
-    </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

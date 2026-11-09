@@ -5,5 +5,6 @@
         // Sube una imagen y devuelve su URL pública
         Task<string> SubirImagenAsync(string ruta, byte[] contenido);
         Task EliminarImagenAsync(string url);
+        Task EliminarCarpetaAsync(string carpeta);
     }
 }

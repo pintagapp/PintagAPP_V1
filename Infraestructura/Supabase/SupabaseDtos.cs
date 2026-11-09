@@ -60,6 +60,7 @@ namespace PintagAPP.Infraestructura.Supabase
         [JsonPropertyName("contenido")] public string Contenido { get; set; } = "";
         [JsonPropertyName("imagen_url")] public string? ImagenUrl { get; set; }
         [JsonPropertyName("fecha_publicacion")] public DateTimeOffset FechaPublicacion { get; set; }
+        [JsonPropertyName("activa")] public bool Activa { get; set; }
     }
     public class FotoOfertaDto
     {
@@ -140,6 +141,37 @@ namespace PintagAPP.Infraestructura.Supabase
         [JsonPropertyName("estrellas")] public int Estrellas { get; set; }
         [JsonPropertyName("comentario")] public string? Comentario { get; set; }
         [JsonPropertyName("perfiles_oferente")] public PerfilDto? Perfil { get; set; }
+    }
+
+    // Archivo del bucket (para borrar la carpeta del usuario)
+    public class ArchivoStorageDto
+    {
+        [JsonPropertyName("id")] public string? Id { get; set; }
+        [JsonPropertyName("name")] public string Nombre { get; set; } = "";
+    }
+
+    // Vista vista_estadisticas (solo devuelve fila si es admin)
+    public class EstadisticasDto
+    {
+        [JsonPropertyName("total_usuarios")] public int TotalUsuarios { get; set; }
+        [JsonPropertyName("oferentes_aprobados")] public int OferentesAprobados { get; set; }
+        [JsonPropertyName("oferentes_pendientes")] public int OferentesPendientes { get; set; }
+        [JsonPropertyName("oferentes_bloqueados")] public int OferentesBloqueados { get; set; }
+        [JsonPropertyName("ofertas_activas")] public int OfertasActivas { get; set; }
+        [JsonPropertyName("ofertas_productos")] public int OfertasProductos { get; set; }
+        [JsonPropertyName("ofertas_servicios")] public int OfertasServicios { get; set; }
+        [JsonPropertyName("total_contactos")] public int TotalContactos { get; set; }
+        [JsonPropertyName("total_calificaciones")] public int TotalCalificaciones { get; set; }
+        [JsonPropertyName("promedio_general")] public decimal? PromedioGeneral { get; set; }
+        [JsonPropertyName("denuncias_pendientes")] public int DenunciasPendientes { get; set; }
+    }
+
+    // Vista vista_estadisticas_categorias
+    public class EstadisticaCategoriaDto
+    {
+        [JsonPropertyName("categoria")] public string Categoria { get; set; } = "";
+        [JsonPropertyName("ofertas_activas")] public int OfertasActivas { get; set; }
+        [JsonPropertyName("oferentes")] public int Oferentes { get; set; }
     }
 
 }

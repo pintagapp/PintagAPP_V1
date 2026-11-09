@@ -7,5 +7,8 @@
         public string Contenido { get; set; } = "";
         public string? ImagenUrl { get; set; }
         public DateTimeOffset FechaPublicacion { get; set; }
+        public bool Activa { get; set; } = true;
+
+        public bool EsNueva => Id == 0;
     }
 }

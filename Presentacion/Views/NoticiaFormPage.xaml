@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:PintagAPP.Presentacion.ViewModels"
+             x:Class="PintagAPP.Presentacion.Views.NoticiaFormPage"
+             x:DataType="vm:NoticiaFormViewModel"
+             Title="{Binding TituloPagina}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="12">
+
+            <Label Text="Título" FontSize="14" />
+            <Entry Text="{Binding Titulo}" Placeholder="Ej.: Feria de emprendedores este domingo" MaxLength="120" />
+
+            <Label Text="Contenido" FontSize="14" />
+            <Editor Text="{Binding Contenido}" Placeholder="Escribe la noticia" HeightRequest="160" />
+
+            <Label Text="Imagen (opcional)" FontSize="14" />
+            <Border HeightRequest="200" Stroke="Transparent" StrokeShape="RoundRectangle 10"
+                    BackgroundColor="LightGray" IsVisible="{Binding TieneImagen}">
+                <Image Source="{Binding VistaPrevia}" Aspect="AspectFit" />
+            </Border>
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                <Button Grid.Column="0" Text="🖼️ Elegir imagen" Command="{Binding ElegirImagenCommand}" />
+                <Button Grid.Column="1" Text="Quitar imagen" Command="{Binding QuitarImagenCommand}"
+                        BackgroundColor="Gray" IsVisible="{Binding TieneImagen}" />
+            </Grid>
+
+            <Grid ColumnDefinitions="*,Auto" Margin="0,8,0,0">
+                <Label Text="Publicada (visible para todos)" FontSize="15" VerticalOptions="Center" />
+                <Switch Grid.Column="1" IsToggled="{Binding Activa}" />
+            </Grid>
+
+            <Button Text="💾 Guardar" Command="{Binding GuardarCommand}"
+                    BackgroundColor="#2E7D32" TextColor="White" Margin="0,10,0,0" />
+            <Button Text="🗑️ Eliminar noticia" Command="{Binding EliminarCommand}"
+                    BackgroundColor="#C62828" TextColor="White" IsVisible="{Binding EsEdicion}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

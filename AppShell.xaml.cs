@@ -19,6 +19,11 @@ namespace PintagAPP
             Routing.RegisterRoute("CalificarPage", typeof(CalificarPage));
             Routing.RegisterRoute("PorCalificarPage", typeof(PorCalificarPage));
             Routing.RegisterRoute("DenunciasPage", typeof(DenunciasPage));
+            Routing.RegisterRoute("MiCuentaPage", typeof(MiCuentaPage));
+            Routing.RegisterRoute("PoliticaPrivacidadPage", typeof(PoliticaPrivacidadPage));
+            Routing.RegisterRoute("EstadisticasPage", typeof(EstadisticasPage));
+            Routing.RegisterRoute("AdminNoticiasPage", typeof(AdminNoticiasPage));
+            Routing.RegisterRoute("NoticiaFormPage", typeof(NoticiaFormPage));
         }
     }
 }

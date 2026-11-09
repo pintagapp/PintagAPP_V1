@@ -128,6 +128,27 @@ namespace PintagAPP.Infraestructura.Supabase
             _http.EstablecerToken(null);
             _sesion.Cerrar();
         }
+        // ---------- ELIMINAR CUENTA (Art. 15 LOPDP) ----------
+        // La función de la BD borra la cuenta y, en cascada, perfil, ofertas, contactos, calificaciones y denuncias
+        public async Task<Resultado> EliminarCuentaAsync()
+        {
+            try
+            {
+                var respuesta = await _http.Cliente.PostAsJsonAsync("rest/v1/rpc/eliminar_mi_cuenta", new { });
+                if (!respuesta.IsSuccessStatusCode)
+                    return Resultado.Error("No se pudo eliminar la cuenta. Inténtalo de nuevo.");
+            }
+            catch (HttpRequestException)
+            {
+                return Resultado.Error("No hay conexión a internet. Inténtalo de nuevo.");
+            }
+
+            // La cuenta ya no existe: se limpia la sesión del celular
+            SecureStorage.Default.Remove(ClaveRefreshToken);
+            _http.EstablecerToken(null);
+            _sesion.Cerrar();
+            return Resultado.Exito("Tu cuenta y todos tus datos fueron eliminados.");
+        }
 
         // ---------- COMÚN ----------
         // Guarda el token, lee los datos del usuario de la tabla usuarios y abre la sesión

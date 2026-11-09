@@ -39,6 +39,7 @@ namespace PintagAPP
             builder.Services.AddSingleton<IContactoRepositorio, SupabaseContactoRepositorio>();
             builder.Services.AddSingleton<ICalificacionRepositorio, SupabaseCalificacionRepositorio>();
             builder.Services.AddSingleton<IDenunciaRepositorio, SupabaseDenunciaRepositorio>();
+            builder.Services.AddSingleton<IEstadisticaRepositorio, SupabaseEstadisticaRepositorio>();
 
             // Estado de la app
             builder.Services.AddSingleton<SesionActual>();
@@ -55,6 +56,9 @@ namespace PintagAPP
             builder.Services.AddTransient<ExplorarOfertas>();
             builder.Services.AddTransient<CalificarOferentes>();
             builder.Services.AddTransient<GestionarDenuncias>();
+            builder.Services.AddTransient<GestionarMiCuenta>();
+            builder.Services.AddTransient<VerEstadisticas>();
+            builder.Services.AddTransient<AdministrarNoticias>();
 
             // Presentación
             builder.Services.AddTransient<RegistroViewModel>();
@@ -89,6 +93,15 @@ namespace PintagAPP
             builder.Services.AddTransient<PorCalificarPage>();
             builder.Services.AddTransient<DenunciasViewModel>();
             builder.Services.AddTransient<DenunciasPage>();
+            builder.Services.AddTransient<MiCuentaViewModel>();
+            builder.Services.AddTransient<MiCuentaPage>();
+            builder.Services.AddTransient<PoliticaPrivacidadPage>();
+            builder.Services.AddTransient<EstadisticasViewModel>();
+            builder.Services.AddTransient<EstadisticasPage>();
+            builder.Services.AddTransient<AdminNoticiasViewModel>();
+            builder.Services.AddTransient<AdminNoticiasPage>();
+            builder.Services.AddTransient<NoticiaFormViewModel>();
+            builder.Services.AddTransient<NoticiaFormPage>();
 
             return builder.Build();
         }

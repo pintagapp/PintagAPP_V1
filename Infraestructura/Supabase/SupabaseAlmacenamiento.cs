@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Headers;
 using PintagAPP.CasosUso.Interfaces;
+using System.Net.Http.Json;
 
 namespace PintagAPP.Infraestructura.Supabase
 {
@@ -42,6 +43,25 @@ namespace PintagAPP.Infraestructura.Supabase
 
             // Si falla no es grave: la foto ya no está enlazada a ninguna oferta
             await _http.Cliente.DeleteAsync($"storage/v1/object/fotos/{ruta}");
+        }
+
+
+        // Borra todas las fotos de una carpeta: fotos/<id_usuario>/ (al eliminar la cuenta)
+        public async Task EliminarCarpetaAsync(string carpeta)
+        {
+            var lista = await _http.Cliente.PostAsJsonAsync("storage/v1/object/list/fotos",
+                new { prefix = carpeta, limit = 1000, offset = 0 });
+            if (!lista.IsSuccessStatusCode) return;
+
+            var archivos = await lista.Content.ReadFromJsonAsync<List<ArchivoStorageDto>>() ?? new();
+            var rutas = archivos.Where(a => a.Id is not null).Select(a => $"{carpeta}/{a.Nombre}").ToList();
+            if (rutas.Count == 0) return;
+
+            using var solicitud = new HttpRequestMessage(HttpMethod.Delete, "storage/v1/object/fotos")
+            {
+                Content = JsonContent.Create(new { prefixes = rutas })
+            };
+            await _http.Cliente.SendAsync(solicitud);
         }
     }
 }

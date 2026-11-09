@@ -13,5 +13,7 @@ namespace PintagAPP.CasosUso.Interfaces
         Task<bool> RestaurarSesionAsync();   // al abrir la app, si ya había iniciado sesión antes
 
         Task CerrarSesionAsync();
+
+        Task<Resultado> EliminarCuentaAsync();
     }
 }
