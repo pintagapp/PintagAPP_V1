@@ -18,6 +18,7 @@ namespace PintagAPP
             Routing.RegisterRoute("DetalleOfertaPage", typeof(DetalleOfertaPage));
             Routing.RegisterRoute("CalificarPage", typeof(CalificarPage));
             Routing.RegisterRoute("PorCalificarPage", typeof(PorCalificarPage));
+            Routing.RegisterRoute("DenunciasPage", typeof(DenunciasPage));
         }
     }
 }

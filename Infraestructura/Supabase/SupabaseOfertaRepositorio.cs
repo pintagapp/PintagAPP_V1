@@ -90,6 +90,14 @@ namespace PintagAPP.Infraestructura.Supabase
             respuesta.EnsureSuccessStatusCode();
         }
 
+        // Pausar o reactivar una oferta (el admin la pausa cuando atiende una denuncia)
+        public async Task CambiarActivaAsync(long ofertaId, bool activa)
+        {
+            var respuesta = await _http.Cliente.PatchAsJsonAsync(
+                $"rest/v1/ofertas?id=eq.{ofertaId}", new { activa });
+            respuesta.EnsureSuccessStatusCode();
+        }
+
         // ---------- PÚBLICO ----------
         public async Task<List<Oferta>> ObtenerPublicasPorCategoriaAsync(long categoriaId)
         {

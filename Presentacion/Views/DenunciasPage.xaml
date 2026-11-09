@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:PintagAPP.Presentacion.ViewModels"
+             x:Class="PintagAPP.Presentacion.Views.DenunciasPage"
+             x:DataType="vm:DenunciasViewModel"
+             Title="Denuncias">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="16" RowSpacing="10">
+
+        <VerticalStackLayout Grid.Row="0" Spacing="6">
+            <ActivityIndicator IsRunning="{Binding EstaCargando}" IsVisible="{Binding EstaCargando}" />
+            <Label Text="{Binding Aviso}" FontSize="14" TextColor="Gray" />
+        </VerticalStackLayout>
+
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Denuncias}"
+                        SelectionMode="Single" SelectedItem="{Binding DenunciaSeleccionada}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="vm:DenunciaItem">
+                    <Border Margin="0,6" Padding="12" Stroke="Transparent" StrokeShape="RoundRectangle 12"
+                            BackgroundColor="{AppThemeBinding Light=#FFF3E0, Dark=#3A2A1A}">
+                        <VerticalStackLayout Spacing="4">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Text="{Binding TipoTexto}" FontSize="15" FontAttributes="Bold" />
+                                <Label Grid.Column="1" Text="{Binding Fecha}" FontSize="12" TextColor="Gray" />
+                            </Grid>
+                            <Label Text="{Binding Descripcion}" FontSize="14" />
+                            <Label Text="{Binding Motivo}" FontSize="14" TextColor="#C62828" />
+                        </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Button Grid.Row="2" Text="🔄 Actualizar lista" Command="{Binding RecargarCommand}" />
+    </Grid>
+</ContentPage>

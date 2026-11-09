@@ -9,6 +9,7 @@ namespace PintagAPP.CasosUso.Interfaces
         Task EliminarAsync(long ofertaId);
         Task AgregarFotoAsync(long ofertaId, string url, int orden);
         Task EliminarFotoAsync(long fotoId);
+        Task CambiarActivaAsync(long ofertaId, bool activa);
 
         // ---- Público ----
         Task<List<Oferta>> ObtenerPublicasPorCategoriaAsync(long categoriaId);

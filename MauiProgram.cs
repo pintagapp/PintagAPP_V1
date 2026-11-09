@@ -8,6 +8,7 @@ using PintagAPP.Infraestructura.Supabase;
 using PintagAPP.Presentacion.ViewModels;
 using PintagAPP.Presentacion.Views;
 using PintagAPP.CasosUso.Calificaciones;
+using PintagAPP.CasosUso.Denuncias;
 
 namespace PintagAPP
 {
@@ -37,6 +38,7 @@ namespace PintagAPP
             builder.Services.AddSingleton<IOfertaRepositorio, SupabaseOfertaRepositorio>();
             builder.Services.AddSingleton<IContactoRepositorio, SupabaseContactoRepositorio>();
             builder.Services.AddSingleton<ICalificacionRepositorio, SupabaseCalificacionRepositorio>();
+            builder.Services.AddSingleton<IDenunciaRepositorio, SupabaseDenunciaRepositorio>();
 
             // Estado de la app
             builder.Services.AddSingleton<SesionActual>();
@@ -52,6 +54,7 @@ namespace PintagAPP
             builder.Services.AddTransient<ModerarPerfiles>();
             builder.Services.AddTransient<ExplorarOfertas>();
             builder.Services.AddTransient<CalificarOferentes>();
+            builder.Services.AddTransient<GestionarDenuncias>();
 
             // Presentación
             builder.Services.AddTransient<RegistroViewModel>();
@@ -84,6 +87,8 @@ namespace PintagAPP
             builder.Services.AddTransient<CalificarPage>();
             builder.Services.AddTransient<PorCalificarViewModel>();
             builder.Services.AddTransient<PorCalificarPage>();
+            builder.Services.AddTransient<DenunciasViewModel>();
+            builder.Services.AddTransient<DenunciasPage>();
 
             return builder.Build();
         }

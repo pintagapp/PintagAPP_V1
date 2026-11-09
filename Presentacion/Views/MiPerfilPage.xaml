@@ -22,6 +22,8 @@
             <Label Text="Administrador" TextColor="Green" IsVisible="{Binding EsAdmin}" />
             <Button Text="{Binding TextoPanelAdmin}" Command="{Binding IrAPanelAdminCommand}"
                     IsVisible="{Binding EsAdmin}" BackgroundColor="#2E7D32" TextColor="White" />
+            <Button Text="{Binding TextoDenuncias}" Command="{Binding IrADenunciasCommand}"
+                    IsVisible="{Binding EsAdmin}" BackgroundColor="#C62828" TextColor="White" />
             <Button Text="🏪 Mi negocio: ofrecer mis servicios o productos"
                     Command="{Binding IrAMiNegocioCommand}" />
             <Button Text="📦 Mis ofertas" Command="{Binding IrAMisOfertasCommand}" />

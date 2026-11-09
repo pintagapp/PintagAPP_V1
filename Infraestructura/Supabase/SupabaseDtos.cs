@@ -113,4 +113,33 @@ namespace PintagAPP.Infraestructura.Supabase
         [JsonPropertyName("perfil_id")] public long PerfilId { get; set; }
     }
 
+
+    // Fila de la tabla denuncias, con lo denunciado embebido (para el panel del admin)
+    public class DenunciaDto
+    {
+        [JsonPropertyName("id")] public long Id { get; set; }
+        [JsonPropertyName("motivo")] public string Motivo { get; set; } = "";
+        [JsonPropertyName("fecha")] public DateTimeOffset Fecha { get; set; }
+        [JsonPropertyName("perfil_id")] public long? PerfilId { get; set; }
+        [JsonPropertyName("oferta_id")] public long? OfertaId { get; set; }
+        [JsonPropertyName("calificacion_id")] public long? CalificacionId { get; set; }
+        [JsonPropertyName("ofertas")] public DenunciaOfertaDto? Oferta { get; set; }
+        [JsonPropertyName("calificaciones")] public DenunciaCalificacionDto? Calificacion { get; set; }
+        [JsonPropertyName("perfiles_oferente")] public PerfilDto? Perfil { get; set; }
+    }
+
+    public class DenunciaOfertaDto
+    {
+        [JsonPropertyName("titulo")] public string Titulo { get; set; } = "";
+        [JsonPropertyName("perfil_id")] public long PerfilId { get; set; }
+        [JsonPropertyName("perfiles_oferente")] public PerfilDto? Perfil { get; set; }
+    }
+
+    public class DenunciaCalificacionDto
+    {
+        [JsonPropertyName("estrellas")] public int Estrellas { get; set; }
+        [JsonPropertyName("comentario")] public string? Comentario { get; set; }
+        [JsonPropertyName("perfiles_oferente")] public PerfilDto? Perfil { get; set; }
+    }
+
 }

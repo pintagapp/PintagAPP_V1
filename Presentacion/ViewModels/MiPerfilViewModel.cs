@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using PintagAPP.CasosUso.Calificaciones;
 using PintagAPP.CasosUso.Cuenta;
+using PintagAPP.CasosUso.Denuncias;
 using PintagAPP.CasosUso.Perfiles;
 
 namespace PintagAPP.Presentacion.ViewModels
@@ -12,14 +13,17 @@ namespace PintagAPP.Presentacion.ViewModels
         private readonly ControlSesion _controlSesion;
         private readonly ModerarPerfiles _moderar;
         private readonly CalificarOferentes _calificar;
+        private readonly GestionarDenuncias _denuncias;
 
         public MiPerfilViewModel(SesionActual sesion, ControlSesion controlSesion,
-                                 ModerarPerfiles moderar, CalificarOferentes calificar)
+                                 ModerarPerfiles moderar, CalificarOferentes calificar,
+                                 GestionarDenuncias denuncias)
         {
             _sesion = sesion;
             _controlSesion = controlSesion;
             _moderar = moderar;
             _calificar = calificar;
+            _denuncias = denuncias;
         }
 
         [ObservableProperty] private bool conSesion;
@@ -28,6 +32,7 @@ namespace PintagAPP.Presentacion.ViewModels
         [ObservableProperty] private bool esAdmin;
         [ObservableProperty] private string textoPanelAdmin = "🛡️ Panel de administración";
         [ObservableProperty] private string textoPorCalificar = "⭐ Por calificar";
+        [ObservableProperty] private string textoDenuncias = "🚩 Denuncias";
 
         public async Task ActualizarAsync()
         {
@@ -64,6 +69,19 @@ namespace PintagAPP.Presentacion.ViewModels
             catch (Exception)
             {
                 TextoPanelAdmin = "🛡️ Panel de administración";
+            }
+
+            // Muestra cuántas denuncias hay pendientes
+            try
+            {
+                int denunciasPendientes = (await _denuncias.ObtenerPendientesAsync()).Count;
+                TextoDenuncias = denunciasPendientes > 0
+                    ? $"🚩 Denuncias ({denunciasPendientes} pendientes)"
+                    : "🚩 Denuncias";
+            }
+            catch (Exception)
+            {
+                TextoDenuncias = "🚩 Denuncias";
             }
         }
 
@@ -102,6 +120,12 @@ namespace PintagAPP.Presentacion.ViewModels
         private async Task IrAPanelAdminAsync()
         {
             await Shell.Current.GoToAsync("PanelAdminPage");
+        }
+
+        [RelayCommand]
+        private async Task IrADenunciasAsync()
+        {
+            await Shell.Current.GoToAsync("DenunciasPage");
         }
     }
 }

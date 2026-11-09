@@ -8,5 +8,6 @@ namespace PintagAPP.CasosUso.Interfaces
         Task<Calificacion?> ObtenerMiaAsync(Guid usuarioId, long perfilId);
         Task<List<long>> ObtenerPerfilesCalificadosAsync(Guid usuarioId);
         Task GuardarAsync(Calificacion calificacion);
+        Task OcultarAsync(long calificacionId);   // solo admin
     }
 }

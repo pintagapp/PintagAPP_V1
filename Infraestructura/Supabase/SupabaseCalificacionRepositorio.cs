@@ -74,6 +74,14 @@ namespace PintagAPP.Infraestructura.Supabase
             respuesta.EnsureSuccessStatusCode();
         }
 
+        // Solo el admin puede cambiar "visible" (lo controla el trigger proteger_calificacion)
+        public async Task OcultarAsync(long calificacionId)
+        {
+            var respuesta = await _http.Cliente.PatchAsJsonAsync(
+                $"rest/v1/calificaciones?id=eq.{calificacionId}", new { visible = false });
+            respuesta.EnsureSuccessStatusCode();
+        }
+
         private static Calificacion Mapear(CalificacionDto f) => new()
         {
             Id = f.Id,

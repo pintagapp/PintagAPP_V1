@@ -118,6 +118,9 @@
 	  <MauiXaml Update="Presentacion\Views\CalificarPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Presentacion\Views\DenunciasPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Presentacion\Views\DetalleOfertaPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

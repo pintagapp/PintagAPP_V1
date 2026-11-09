@@ -4,10 +4,11 @@ using CommunityToolkit.Mvvm.Input;
 using PintagAPP.CasosUso.Calificaciones;
 using PintagAPP.CasosUso.Ofertas;
 using PintagAPP.Dominio.Entidades;
+using PintagAPP.CasosUso.Denuncias;
 
 namespace PintagAPP.Presentacion.ViewModels
 {
-    public record OpinionItem(string Estrellas, string? Comentario, string Fecha)
+    public record OpinionItem(long Id, string Estrellas, string? Comentario, string Fecha)
     {
         public bool TieneComentario => !string.IsNullOrEmpty(Comentario);
     }
@@ -20,10 +21,14 @@ namespace PintagAPP.Presentacion.ViewModels
         private Oferta? _oferta;
         private bool _preguntarAlVolver;   // se activa al abrir WhatsApp o el marcador
 
-        public DetalleOfertaViewModel(ExplorarOfertas explorar, CalificarOferentes calificar)
+        private readonly GestionarDenuncias _denuncias;
+
+        public DetalleOfertaViewModel(ExplorarOfertas explorar, CalificarOferentes calificar,
+                                      GestionarDenuncias denuncias)
         {
             _explorar = explorar;
             _calificar = calificar;
+            _denuncias = denuncias;
         }
 
         public ObservableCollection<FotoOferta> Fotos { get; } = new();
@@ -135,8 +140,8 @@ namespace PintagAPP.Presentacion.ViewModels
             Opiniones.Clear();
             var lista = await _calificar.ObtenerOpinionesAsync(_oferta.PerfilId);
             foreach (var c in lista)
-                Opiniones.Add(new OpinionItem(c.TextoEstrellas, c.Comentario,
-                                              c.Fecha.ToLocalTime().ToString("dd/MM/yyyy")));
+                Opiniones.Add(new OpinionItem(c.Id, c.TextoEstrellas, c.Comentario,
+                              c.Fecha.ToLocalTime().ToString("dd/MM/yyyy")));
             SinOpiniones = Opiniones.Count == 0;
         }
 
@@ -198,7 +203,54 @@ namespace PintagAPP.Presentacion.ViewModels
                 // El recordatorio es opcional: si falla, no se molesta al usuario
             }
         }
+        // ---------- DENUNCIAS ----------
+        [RelayCommand]
+        private async Task DenunciarOfertaAsync()
+        {
+            if (_oferta is null) return;
+            if (!_denuncias.HaySesion)
+            {
+                await PedirSesionAsync("Para denunciar necesitas una cuenta.");
+                return;
+            }
 
+            var motivo = await PedirMotivoAsync("¿Por qué denuncias esta oferta?");
+            if (motivo is null) return;
+
+            var resultado = await _denuncias.DenunciarOfertaAsync(_oferta.Id, motivo);
+            await Shell.Current.DisplayAlertAsync(resultado.EsExito ? "Denuncia enviada" : "Error",
+                                                  resultado.Mensaje, "Aceptar");
+        }
+
+        [RelayCommand]
+        private async Task DenunciarOpinionAsync(long calificacionId)
+        {
+            if (!_denuncias.HaySesion)
+            {
+                await PedirSesionAsync("Para denunciar necesitas una cuenta.");
+                return;
+            }
+
+            var motivo = await PedirMotivoAsync("¿Por qué denuncias esta opinión?");
+            if (motivo is null) return;
+
+            var resultado = await _denuncias.DenunciarOpinionAsync(calificacionId, motivo);
+            await Shell.Current.DisplayAlertAsync(resultado.EsExito ? "Denuncia enviada" : "Error",
+                                                  resultado.Mensaje, "Aceptar");
+        }
+
+        // Lista de motivos; "Otro" pide escribirlo
+        private static async Task<string?> PedirMotivoAsync(string titulo)
+        {
+            var opcion = await Shell.Current.DisplayActionSheetAsync(titulo, "Cancelar", null,
+                                                                     GestionarDenuncias.Motivos);
+            if (opcion is null || opcion == "Cancelar") return null;
+            if (opcion != "Otro") return opcion;
+
+            var texto = await Shell.Current.DisplayPromptAsync("Otro motivo", "Cuéntanos qué pasa:",
+                                                               "Enviar", "Cancelar", maxLength: 280);
+            return string.IsNullOrWhiteSpace(texto) ? null : $"Otro: {texto.Trim()}";
+        }
         private Task IrACalificarAsync() =>
             Shell.Current.GoToAsync("CalificarPage", new Dictionary<string, object>
             {

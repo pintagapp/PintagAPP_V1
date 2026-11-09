@@ -75,9 +75,17 @@
                                     <Border Padding="12" Stroke="Transparent" StrokeShape="RoundRectangle 12"
                                             BackgroundColor="{AppThemeBinding Light=#F2F6FA, Dark=#2A2A2A}">
                                         <VerticalStackLayout Spacing="4">
-                                            <Grid ColumnDefinitions="*,Auto">
+                                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
                                                 <Label Text="{Binding Estrellas}" FontSize="16" TextColor="#F9A825" />
-                                                <Label Grid.Column="1" Text="{Binding Fecha}" FontSize="12" TextColor="Gray" />
+                                                <Label Grid.Column="1" Text="{Binding Fecha}" FontSize="12"
+                                                       TextColor="Gray" VerticalOptions="Center" />
+                                                <Label Grid.Column="2" Text="🚩" FontSize="15" VerticalOptions="Center">
+                                                    <Label.GestureRecognizers>
+                                                        <TapGestureRecognizer
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DetalleOfertaViewModel}}, Path=DenunciarOpinionCommand}"
+                                                            CommandParameter="{Binding Id}" />
+                                                    </Label.GestureRecognizers>
+                                                </Label>
                                             </Grid>
                                             <Label Text="Usuario de Píntag" FontSize="12" TextColor="Gray" />
                                             <Label Text="{Binding Comentario}" IsVisible="{Binding TieneComentario}" FontSize="14" />
@@ -87,6 +95,14 @@
                             </BindableLayout.ItemTemplate>
                         </VerticalStackLayout>
                     </VerticalStackLayout>
+
+                    <!-- Denunciar la oferta (discreto, al final) -->
+                    <Label Text="🚩 Denunciar esta oferta" FontSize="13" TextColor="Gray"
+                           HorizontalOptions="Center" Margin="0,8,0,0" IsVisible="{Binding PuedeContactar}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding DenunciarOfertaCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
                 </VerticalStackLayout>
             </VerticalStackLayout>
         </ScrollView>
