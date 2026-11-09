@@ -28,11 +28,35 @@ namespace PintagAPP.CasosUso.Ofertas
 
         public bool HaySesion => _sesion.EstaIniciada;
 
-        public Task<List<Oferta>> ListarPorCategoriaAsync(long categoriaId) =>
-            _ofertas.ObtenerPublicasPorCategoriaAsync(categoriaId);
+        public async Task<List<Oferta>> ListarPorCategoriaAsync(long categoriaId)
+        {
+            var ofertas = await _ofertas.ObtenerPublicasPorCategoriaAsync(categoriaId);
+            await AgregarCalificacionesAsync(ofertas);
+            return ofertas;
+        }
 
-        public Task<Oferta?> ObtenerDetalleAsync(long ofertaId) =>
-            _ofertas.ObtenerPublicaAsync(ofertaId);
+        public async Task<Oferta?> ObtenerDetalleAsync(long ofertaId)
+        {
+            var oferta = await _ofertas.ObtenerPublicaAsync(ofertaId);
+            if (oferta is not null)
+                await AgregarCalificacionesAsync(new List<Oferta> { oferta });
+            return oferta;
+        }
+
+        // Completa el promedio de estrellas de cada oferente (una sola consulta para toda la lista)
+        private async Task AgregarCalificacionesAsync(List<Oferta> ofertas)
+        {
+            var perfiles = await _perfiles.ObtenerPublicosAsync(ofertas.Select(o => o.PerfilId));
+            foreach (var o in ofertas)
+            {
+                var p = perfiles.FirstOrDefault(x => x.Id == o.PerfilId);
+                if (o.Oferente is not null && p is not null)
+                {
+                    o.Oferente.PromedioEstrellas = p.PromedioEstrellas;
+                    o.Oferente.TotalCalificaciones = p.TotalCalificaciones;
+                }
+            }
+        }
 
         // ¿La oferta es del usuario que está viendo? (para no mostrarle los botones de contacto)
         public async Task<bool> EsMiaAsync(Oferta oferta)

@@ -25,6 +25,8 @@
             <Button Text="🏪 Mi negocio: ofrecer mis servicios o productos"
                     Command="{Binding IrAMiNegocioCommand}" />
             <Button Text="📦 Mis ofertas" Command="{Binding IrAMisOfertasCommand}" />
+            <Button Text="{Binding TextoPorCalificar}" Command="{Binding IrAPorCalificarCommand}"
+                    BackgroundColor="#F9A825" TextColor="Black" />
             <Button Text="Cerrar sesión" Command="{Binding CerrarSesionCommand}" BackgroundColor="Gray" />
         </VerticalStackLayout>
 

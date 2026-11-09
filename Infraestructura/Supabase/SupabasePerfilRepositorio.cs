@@ -73,6 +73,29 @@ namespace PintagAPP.Infraestructura.Supabase
             return filas?.FirstOrDefault()?.Telefono;
         }
 
+        // Datos públicos + promedio de estrellas (la vista solo trae perfiles aprobados)
+        public async Task<List<PerfilOferente>> ObtenerPublicosAsync(IEnumerable<long> perfilIds)
+        {
+            var ids = string.Join(",", perfilIds.Distinct());
+            if (ids.Length == 0) return new List<PerfilOferente>();
+
+            var filas = await _http.Cliente.GetFromJsonAsync<List<PerfilPublicoDto>>(
+                $"rest/v1/vista_perfiles_publicos?id=in.({ids})&select=*");
+
+            return (filas ?? new List<PerfilPublicoDto>()).Select(f => new PerfilOferente
+            {
+                Id = f.Id,
+                NombrePersona = f.NombrePersona,
+                NombreNegocio = f.NombreNegocio,
+                Descripcion = f.Descripcion,
+                FotoUrl = f.FotoUrl,
+                BarrioNombre = f.Barrio,
+                Estado = "aprobado",
+                PromedioEstrellas = f.PromedioEstrellas,
+                TotalCalificaciones = f.TotalCalificaciones
+            }).ToList();
+        }
+
         // ---------- ADMINISTRADOR ----------
         // RLS: el admin puede ver y editar todos los perfiles (es_admin()).
         public async Task<List<PerfilOferente>> ObtenerPorEstadoAsync(string estado)

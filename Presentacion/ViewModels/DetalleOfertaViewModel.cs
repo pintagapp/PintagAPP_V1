@@ -1,25 +1,33 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using PintagAPP.CasosUso.Calificaciones;
 using PintagAPP.CasosUso.Ofertas;
 using PintagAPP.Dominio.Entidades;
-using System.Collections.ObjectModel;
-using static Android.Icu.Text.CaseMap;
-using static Android.Util.EventLogTags;
 
 namespace PintagAPP.Presentacion.ViewModels
 {
+    public record OpinionItem(string Estrellas, string? Comentario, string Fecha)
+    {
+        public bool TieneComentario => !string.IsNullOrEmpty(Comentario);
+    }
+
     public partial class DetalleOfertaViewModel : ObservableObject, IQueryAttributable
     {
         private readonly ExplorarOfertas _explorar;
+        private readonly CalificarOferentes _calificar;
         private long _ofertaId;
         private Oferta? _oferta;
+        private bool _preguntarAlVolver;   // se activa al abrir WhatsApp o el marcador
 
-        public DetalleOfertaViewModel(ExplorarOfertas explorar)
+        public DetalleOfertaViewModel(ExplorarOfertas explorar, CalificarOferentes calificar)
         {
             _explorar = explorar;
+            _calificar = calificar;
         }
 
         public ObservableCollection<FotoOferta> Fotos { get; } = new();
+        public ObservableCollection<OpinionItem> Opiniones { get; } = new();
 
         [ObservableProperty] private string titulo = "";
         [ObservableProperty] private string precio = "";
@@ -33,6 +41,9 @@ namespace PintagAPP.Presentacion.ViewModels
         [ObservableProperty] private bool tieneFotoOferente;
         [ObservableProperty] private string barrio = "";
         [ObservableProperty] private string descripcionOferente = "";
+        [ObservableProperty] private string calificacionTexto = "Sin calificaciones";
+        [ObservableProperty] private bool sinOpiniones;
+        [ObservableProperty] private string textoBotonCalificar = "⭐ Calificar";
 
         [ObservableProperty] private bool esMia;
         [ObservableProperty] private bool puedeContactar;
@@ -41,6 +52,7 @@ namespace PintagAPP.Presentacion.ViewModels
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(WhatsAppCommand))]
         [NotifyCanExecuteChangedFor(nameof(LlamarCommand))]
+        [NotifyCanExecuteChangedFor(nameof(CalificarCommand))]
         private bool estaOcupado;
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -79,9 +91,12 @@ namespace PintagAPP.Presentacion.ViewModels
                 TieneFotoOferente = !string.IsNullOrEmpty(FotoOferente);
                 Barrio = oferente?.BarrioNombre ?? "";
                 DescripcionOferente = oferente?.Descripcion ?? "";
+                CalificacionTexto = oferente?.TextoCalificacion ?? "Sin calificaciones";
+                TextoBotonCalificar = $"⭐ Calificar a {NombreOferente}";
 
                 EsMia = await _explorar.EsMiaAsync(_oferta);
                 PuedeContactar = !EsMia;
+                await CargarOpinionesAsync();
                 HayDatos = true;
             }
             catch (Exception)
@@ -94,6 +109,37 @@ namespace PintagAPP.Presentacion.ViewModels
             }
         }
 
+        // Al volver a la pantalla (después de calificar o de iniciar sesión): actualiza sin recargar fotos
+        public async Task RefrescarAsync()
+        {
+            if (_oferta is null) return;
+            try
+            {
+                var actual = await _explorar.ObtenerDetalleAsync(_ofertaId);
+                if (actual?.Oferente is not null)
+                    CalificacionTexto = actual.Oferente.TextoCalificacion;
+
+                EsMia = await _explorar.EsMiaAsync(_oferta);
+                PuedeContactar = !EsMia;
+                await CargarOpinionesAsync();
+            }
+            catch (Exception)
+            {
+                // Si falla, se queda con lo que ya mostraba
+            }
+        }
+
+        private async Task CargarOpinionesAsync()
+        {
+            if (_oferta is null) return;
+            Opiniones.Clear();
+            var lista = await _calificar.ObtenerOpinionesAsync(_oferta.PerfilId);
+            foreach (var c in lista)
+                Opiniones.Add(new OpinionItem(c.TextoEstrellas, c.Comentario,
+                                              c.Fecha.ToLocalTime().ToString("dd/MM/yyyy")));
+            SinOpiniones = Opiniones.Count == 0;
+        }
+
         private bool PuedeTocar() => !EstaOcupado;
 
         [RelayCommand(CanExecute = nameof(PuedeTocar))]
@@ -102,17 +148,80 @@ namespace PintagAPP.Presentacion.ViewModels
         [RelayCommand(CanExecute = nameof(PuedeTocar))]
         private Task LlamarAsync() => ContactarAsync(ExplorarOfertas.CanalLlamada);
 
+        [RelayCommand(CanExecute = nameof(PuedeTocar))]
+        private async Task CalificarAsync()
+        {
+            if (_oferta is null) return;
+
+            if (!_calificar.HaySesion)
+            {
+                await PedirSesionAsync("Para calificar al oferente necesitas una cuenta.");
+                return;
+            }
+
+            EstaOcupado = true;
+            try
+            {
+                var resultado = await _calificar.VerificarPuedeCalificarAsync(_oferta.PerfilId);
+                if (!resultado.EsExito)
+                {
+                    await Shell.Current.DisplayAlertAsync("Calificar", resultado.Mensaje, "Aceptar");
+                    return;
+                }
+                await IrACalificarAsync();
+            }
+            finally
+            {
+                EstaOcupado = false;
+            }
+        }
+
+        // Recordatorio: al regresar de WhatsApp o de la llamada, pregunta una sola vez
+        public async Task AlVolverALaAppAsync()
+        {
+            if (!_preguntarAlVolver || _oferta is null) return;
+            _preguntarAlVolver = false;
+
+            try
+            {
+                var yaCalifico = await _calificar.ObtenerMiCalificacionAsync(_oferta.PerfilId);
+                if (yaCalifico is not null) return;
+
+                bool calificar = await Shell.Current.DisplayAlertAsync($"¿Ya te atendió {NombreOferente}?",
+                    "Tu opinión ayuda a otros vecinos de Píntag. ¿Quieres calificarlo?",
+                    "Calificar", "Más tarde");
+                if (calificar)
+                    await IrACalificarAsync();
+            }
+            catch (Exception)
+            {
+                // El recordatorio es opcional: si falla, no se molesta al usuario
+            }
+        }
+
+        private Task IrACalificarAsync() =>
+            Shell.Current.GoToAsync("CalificarPage", new Dictionary<string, object>
+            {
+                ["perfilId"] = _oferta!.PerfilId,
+                ["nombre"] = NombreOferente
+            });
+
+        private async Task PedirSesionAsync(string mensaje)
+        {
+            bool irALogin = await Shell.Current.DisplayAlertAsync("Inicia sesión",
+                $"{mensaje} Así cuidamos los datos de los emprendedores.",
+                "Iniciar sesión", "Ahora no");
+            if (irALogin)
+                await Shell.Current.GoToAsync("LoginPage");
+        }
+
         private async Task ContactarAsync(string canal)
         {
             if (_oferta is null) return;
 
             if (!_explorar.HaySesion)
             {
-                bool irALogin = await Shell.Current.DisplayAlertAsync("Inicia sesión",
-                    "Para contactar al oferente necesitas una cuenta. Así cuidamos los datos de los emprendedores.",
-                    "Iniciar sesión", "Ahora no");
-                if (irALogin)
-                    await Shell.Current.GoToAsync("LoginPage");
+                await PedirSesionAsync("Para contactar al oferente necesitas una cuenta.");
                 return;
             }
 
@@ -130,10 +239,12 @@ namespace PintagAPP.Presentacion.ViewModels
                 {
                     var texto = Uri.EscapeDataString(ExplorarOfertas.MensajeWhatsApp(_oferta));
                     await Launcher.Default.OpenAsync(new Uri($"https://wa.me/{datos.NumeroWhatsApp}?text={texto}"));
+                    _preguntarAlVolver = true;
                 }
                 else if (PhoneDialer.Default.IsSupported)
                 {
                     PhoneDialer.Default.Open(datos.Telefono);
+                    _preguntarAlVolver = true;
                 }
                 else
                 {

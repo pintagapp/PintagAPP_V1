@@ -19,5 +19,13 @@ namespace PintagAPP.Infraestructura.Supabase
                 new { usuario_id = usuarioId, perfil_id = perfilId, canal });
             respuesta.EnsureSuccessStatusCode();
         }
+
+        public async Task<List<long>> ObtenerPerfilesContactadosAsync(Guid usuarioId)
+        {
+            var filas = await _http.Cliente.GetFromJsonAsync<List<SoloPerfilIdDto>>(
+                $"rest/v1/contactos?usuario_id=eq.{usuarioId}&select=perfil_id");
+
+            return (filas ?? new List<SoloPerfilIdDto>()).Select(f => f.PerfilId).Distinct().ToList();
+        }
     }
 }

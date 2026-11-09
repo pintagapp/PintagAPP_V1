@@ -4,7 +4,8 @@ using PintagAPP.CasosUso.Ofertas;
 
 namespace PintagAPP.Presentacion.ViewModels
 {
-    public record OfertaPublicaResumen(long Id, string Titulo, string Precio, string Oferente, string Barrio, string? FotoUrl)
+    public record OfertaPublicaResumen(long Id, string Titulo, string Precio, string Oferente, string Barrio,
+                                    string? FotoUrl, string Calificacion)
     {
         public bool TieneFoto => !string.IsNullOrEmpty(FotoUrl);
     }
@@ -47,7 +48,8 @@ namespace PintagAPP.Presentacion.ViewModels
                     Ofertas.Add(new OfertaPublicaResumen(o.Id, o.Titulo, o.TextoPrecio,
                                                   o.Oferente?.NombreVisible ?? "",
                                                   o.Oferente?.BarrioNombre ?? "",
-                                                  o.FotoPrincipal));
+                                                  o.FotoPrincipal,
+                                                  o.Oferente?.TextoCalificacion ?? "Sin calificaciones"));
 
                 if (Ofertas.Count == 0)
                     Aviso = "Aún no hay ofertas en esta categoría.";

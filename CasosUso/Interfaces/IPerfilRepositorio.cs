@@ -7,6 +7,7 @@ namespace PintagAPP.CasosUso.Interfaces
         Task<PerfilOferente?> ObtenerPorUsuarioAsync(Guid usuarioId);
         Task<PerfilOferente> GuardarAsync(PerfilOferente perfil);
         Task<string?> ObtenerTelefonoAsync(long perfilId);
+        Task<List<PerfilOferente>> ObtenerPublicosAsync(IEnumerable<long> perfilIds);
 
         // ---- Administrador ----
         Task<List<PerfilOferente>> ObtenerPorEstadoAsync(string estado);

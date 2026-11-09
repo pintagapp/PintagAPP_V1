@@ -84,4 +84,33 @@ namespace PintagAPP.Infraestructura.Supabase
         [JsonPropertyName("perfiles_oferente")] public PerfilDto? Perfil { get; set; }   // embebido en consultas públicas
     }
 
+    // Fila de la vista vista_perfiles_publicos (datos públicos + promedio de estrellas)
+    public class PerfilPublicoDto
+    {
+        [JsonPropertyName("id")] public long Id { get; set; }
+        [JsonPropertyName("nombre_persona")] public string NombrePersona { get; set; } = "";
+        [JsonPropertyName("nombre_negocio")] public string? NombreNegocio { get; set; }
+        [JsonPropertyName("descripcion")] public string Descripcion { get; set; } = "";
+        [JsonPropertyName("foto_url")] public string? FotoUrl { get; set; }
+        [JsonPropertyName("barrio")] public string? Barrio { get; set; }
+        [JsonPropertyName("promedio_estrellas")] public decimal? PromedioEstrellas { get; set; }
+        [JsonPropertyName("total_calificaciones")] public int TotalCalificaciones { get; set; }
+    }
+
+    // Fila de la tabla calificaciones
+    public class CalificacionDto
+    {
+        [JsonPropertyName("id")] public long Id { get; set; }
+        [JsonPropertyName("perfil_id")] public long PerfilId { get; set; }
+        [JsonPropertyName("estrellas")] public int Estrellas { get; set; }
+        [JsonPropertyName("comentario")] public string? Comentario { get; set; }
+        [JsonPropertyName("fecha")] public DateTimeOffset Fecha { get; set; }
+    }
+
+    // Para consultas que solo traen perfil_id (contactos y calificaciones del usuario)
+    public class SoloPerfilIdDto
+    {
+        [JsonPropertyName("perfil_id")] public long PerfilId { get; set; }
+    }
+
 }

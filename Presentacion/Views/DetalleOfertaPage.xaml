@@ -56,24 +56,51 @@
                                 </Border>
                                 <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
                                     <Label Text="{Binding NombreOferente}" FontSize="16" FontAttributes="Bold" />
+                                    <Label Text="{Binding CalificacionTexto}" FontSize="13" TextColor="#F9A825" />
                                     <Label Text="{Binding Barrio, StringFormat='📍 {0}'}" FontSize="13" TextColor="Gray" />
                                 </VerticalStackLayout>
                             </Grid>
                             <Label Text="{Binding DescripcionOferente}" FontSize="14" />
                         </VerticalStackLayout>
                     </Border>
+
+                    <!-- Opiniones (las 5 más recientes, anónimas) -->
+                    <VerticalStackLayout Padding="16,8,16,0" Spacing="8">
+                        <Label Text="Opiniones" FontSize="18" FontAttributes="Bold" />
+                        <Label Text="Aún no hay opiniones." IsVisible="{Binding SinOpiniones}"
+                               FontSize="14" TextColor="Gray" />
+                        <VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Opiniones}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="vm:OpinionItem">
+                                    <Border Padding="12" Stroke="Transparent" StrokeShape="RoundRectangle 12"
+                                            BackgroundColor="{AppThemeBinding Light=#F2F6FA, Dark=#2A2A2A}">
+                                        <VerticalStackLayout Spacing="4">
+                                            <Grid ColumnDefinitions="*,Auto">
+                                                <Label Text="{Binding Estrellas}" FontSize="16" TextColor="#F9A825" />
+                                                <Label Grid.Column="1" Text="{Binding Fecha}" FontSize="12" TextColor="Gray" />
+                                            </Grid>
+                                            <Label Text="Usuario de Píntag" FontSize="12" TextColor="Gray" />
+                                            <Label Text="{Binding Comentario}" IsVisible="{Binding TieneComentario}" FontSize="14" />
+                                        </VerticalStackLayout>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
                 </VerticalStackLayout>
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Contacto -->
-        <VerticalStackLayout Grid.Row="1" Padding="16,8,16,16" IsVisible="{Binding HayDatos}">
+        <!-- Contacto y calificación -->
+        <VerticalStackLayout Grid.Row="1" Padding="16,8,16,16" Spacing="8" IsVisible="{Binding HayDatos}">
             <Grid ColumnDefinitions="*,*" ColumnSpacing="12" IsVisible="{Binding PuedeContactar}">
                 <Button Grid.Column="0" Text="📞 Llamar" BackgroundColor="#1565C0" TextColor="White"
                         Command="{Binding LlamarCommand}" />
                 <Button Grid.Column="1" Text="💬 WhatsApp" BackgroundColor="#25D366" TextColor="White"
                         Command="{Binding WhatsAppCommand}" />
             </Grid>
+            <Button Text="{Binding TextoBotonCalificar}" IsVisible="{Binding PuedeContactar}"
+                    BackgroundColor="#F9A825" TextColor="Black" Command="{Binding CalificarCommand}" />
             <Label Text="Esta es tu oferta" IsVisible="{Binding EsMia}" FontSize="15" TextColor="Gray"
                    HorizontalOptions="Center" />
         </VerticalStackLayout>
