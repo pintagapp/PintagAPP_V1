@@ -54,7 +54,13 @@
             <Label Text="Categorías" FontSize="18" FontAttributes="Bold" />
 
             <ActivityIndicator IsRunning="{Binding EstaCargando}" IsVisible="{Binding EstaCargando}" />
-            <Label Text="{Binding Mensaje}" TextColor="Red" />
+            <Label Text="{Binding Mensaje}" TextColor="Red">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label" Binding="{Binding Mensaje}" Value="">
+                        <Setter Property="IsVisible" Value="False" />
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
 
             <CollectionView ItemsSource="{Binding Categorias}"
                             SelectionMode="Single" SelectedItem="{Binding CategoriaSeleccionada}">

@@ -83,7 +83,19 @@ namespace PintagAPP.Infraestructura.Supabase
         // ---------- RESTAURAR SESIÓN (al abrir la app) ----------
         public async Task<bool> RestaurarSesionAsync()
         {
-            var refreshToken = await SecureStorage.Default.GetAsync(ClaveRefreshToken);
+            string? refreshToken;
+            try
+            {
+                refreshToken = await SecureStorage.Default.GetAsync(ClaveRefreshToken);
+            }
+            catch (Exception)
+            {
+                // La sesión guardada no se puede leer (por ejemplo, restaurada de un respaldo
+                // de otra instalación): se descarta y la persona inicia sesión de nuevo
+                SecureStorage.Default.RemoveAll();
+                return false;
+            }
+
             if (string.IsNullOrEmpty(refreshToken))
                 return false;
 
@@ -106,8 +118,9 @@ namespace PintagAPP.Infraestructura.Supabase
                 var resultado = await CompletarSesionAsync(token);
                 return resultado.EsExito;
             }
-            catch (HttpRequestException)
+            catch (Exception)
             {
+                // Sin internet u otro problema: la app abre igual, sin sesión
                 return false;
             }
         }

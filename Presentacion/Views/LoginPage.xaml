@@ -13,7 +13,18 @@
             <Label Text="Inicia sesión para contactar y ofrecer" TextColor="Gray" />
 
             <Entry Placeholder="Correo electrónico" Keyboard="Email" Text="{Binding Correo}" />
-            <Entry Placeholder="Contraseña" IsPassword="True" Text="{Binding Contrasena}" />
+            <Entry Placeholder="Contraseña" IsPassword="True" Text="{Binding Contrasena}">
+                <Entry.Triggers>
+                    <DataTrigger TargetType="Entry"
+                                 Binding="{Binding Source={x:Reference verClaveLogin}, Path=IsChecked}" Value="True">
+                        <Setter Property="IsPassword" Value="False" />
+                    </DataTrigger>
+                </Entry.Triggers>
+            </Entry>
+            <HorizontalStackLayout Spacing="4" Margin="0,-6,0,0">
+                <CheckBox x:Name="verClaveLogin" VerticalOptions="Center" />
+                <Label Text="Mostrar contraseña" FontSize="14" VerticalOptions="Center" />
+            </HorizontalStackLayout>
 
             <Button Text="Iniciar sesión" Command="{Binding IniciarSesionCommand}" />
 

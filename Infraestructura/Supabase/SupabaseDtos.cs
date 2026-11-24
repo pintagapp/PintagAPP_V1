@@ -174,4 +174,10 @@ namespace PintagAPP.Infraestructura.Supabase
         [JsonPropertyName("oferentes")] public int Oferentes { get; set; }
     }
 
+    // Para funciones que devuelven solo ids
+    public class IdDto
+    {
+        [JsonPropertyName("id")] public long Id { get; set; }
+    }
+
 }

@@ -8,10 +8,10 @@
     Title="Píntag Conecta">
 
     <TabBar>
-        <ShellContent Title="Inicio"    ContentTemplate="{DataTemplate views:InicioPage}"   Route="InicioPage" />
-        <ShellContent Title="Buscar"    ContentTemplate="{DataTemplate views:BuscarPage}"   Route="BuscarPage" />
-        <ShellContent Title="Noticias"  ContentTemplate="{DataTemplate views:NoticiasPage}" Route="NoticiasPage" />
-        <ShellContent Title="Mi perfil" ContentTemplate="{DataTemplate views:MiPerfilPage}" Route="MiPerfilPage" />
+        <ShellContent Title="Inicio"    Icon="inicio.png"   ContentTemplate="{DataTemplate views:InicioPage}"   Route="InicioPage" />
+        <ShellContent Title="Buscar"    Icon="buscar.png"   ContentTemplate="{DataTemplate views:BuscarPage}"   Route="BuscarPage" />
+        <ShellContent Title="Noticias"  Icon="noticias.png" ContentTemplate="{DataTemplate views:NoticiasPage}" Route="NoticiasPage" />
+        <ShellContent Title="Mi perfil" Icon="perfil.png"   ContentTemplate="{DataTemplate views:MiPerfilPage}" Route="MiPerfilPage" />
     </TabBar>
 
 </Shell>

@@ -15,7 +15,18 @@
             <Entry Placeholder="Nombres y apellidos completos" Text="{Binding NombresCompletos}" />
             <Entry Placeholder="Cédula" Keyboard="Numeric" MaxLength="10" Text="{Binding Cedula}" />
             <Entry Placeholder="Correo electrónico" Keyboard="Email" Text="{Binding Correo}" />
-            <Entry Placeholder="Contraseña (mínimo 8 caracteres)" IsPassword="True" Text="{Binding Contrasena}" />
+            <Entry Placeholder="Contraseña (mínimo 8 caracteres)" IsPassword="True" Text="{Binding Contrasena}">
+                <Entry.Triggers>
+                    <DataTrigger TargetType="Entry"
+                                 Binding="{Binding Source={x:Reference verClaveRegistro}, Path=IsChecked}" Value="True">
+                        <Setter Property="IsPassword" Value="False" />
+                    </DataTrigger>
+                </Entry.Triggers>
+            </Entry>
+            <HorizontalStackLayout Spacing="4" Margin="0,-6,0,0">
+                <CheckBox x:Name="verClaveRegistro" VerticalOptions="Center" />
+                <Label Text="Mostrar contraseña" FontSize="14" VerticalOptions="Center" />
+            </HorizontalStackLayout>
 
             <HorizontalStackLayout Spacing="8">
                 <CheckBox IsChecked="{Binding AceptaAviso}" VerticalOptions="Start" />

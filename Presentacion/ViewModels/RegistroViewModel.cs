@@ -35,9 +35,23 @@ namespace PintagAPP.Presentacion.ViewModels
             var resultado = await _registrarUsuario.EjecutarAsync(
                 NombresCompletos, Cedula, Correo, Contrasena, AceptaAviso);
 
-            MensajeEsError = !resultado.EsExito;
-            Mensaje = resultado.Mensaje;
             EstaOcupado = false;
+
+            if (!resultado.EsExito)
+            {
+                MensajeEsError = true;
+                Mensaje = resultado.Mensaje;
+                return;
+            }
+
+            // Éxito: avisa y regresa a la pantalla de iniciar sesión
+            await Shell.Current.DisplayAlertAsync("¡Cuenta creada!",
+                "Te enviamos un correo. Abre el enlace para confirmar tu cuenta y luego inicia sesión.",
+                "Ir a iniciar sesión");
+
+            NombresCompletos = Cedula = Correo = Contrasena = "";
+            AceptaAviso = false;
+            await Shell.Current.GoToAsync("..");
         }
     }
 }
