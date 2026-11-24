@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Píntag Conecta</title>
+  <style>
+    body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+           font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+           background:#F2F6FA; color:#1f2937; padding:16px; box-sizing:border-box; }
+    .tarjeta { background:#fff; max-width:420px; width:100%; border-radius:16px; padding:32px 24px;
+               text-align:center; box-shadow:0 4px 20px rgba(0,0,0,.08); }
+    .icono { font-size:56px; }
+    h1 { font-size:22px; margin:12px 0 8px; }
+    p { font-size:16px; line-height:1.5; color:#4b5563; margin:0 0 8px; }
+    .marca { margin-top:24px; font-size:13px; color:#9ca3af; }
+  </style>
+</head>
+<body>
+  <div class="tarjeta">
+    <div class="icono" id="icono">✅</div>
+    <h1 id="titulo">¡Cuenta confirmada!</h1>
+    <p id="texto">Tu correo fue verificado. Ya puedes volver a la app <b>Píntag Conecta</b> e iniciar sesión.</p>
+    <div class="marca">Píntag Conecta · GAD Parroquial de Píntag</div>
+  </div>
+  <script>
+    // Si el enlace venció o ya fue usado, Supabase lo indica en la dirección (#error=...)
+    var h = window.location.hash || "";
+    if (h.indexOf("error") !== -1) {
+      document.getElementById("icono").textContent = "⚠️";
+      document.getElementById("titulo").textContent = "El enlace ya no es válido";
+      document.getElementById("texto").innerHTML =
+        "Puede que haya vencido o que ya lo hayas usado. Intenta <b>iniciar sesión</b> en la app; " +
+        "si no te deja, regístrate de nuevo para recibir otro correo.";
+    }
+    // Quita el token de la barra de direcciones por seguridad
+    if (h) history.replaceState(null, "", window.location.pathname);
+  </script>
+</body>
+</html>
