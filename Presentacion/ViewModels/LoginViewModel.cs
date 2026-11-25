@@ -42,6 +42,27 @@ namespace PintagAPP.Presentacion.ViewModels
             Mensaje = resultado.Mensaje;
         }
 
+        // Pide el correo y Supabase envía el enlace para crear una nueva contraseña
+        [RelayCommand]
+        private async Task OlvideContrasenaAsync()
+        {
+            if (EstaOcupado) return;
+
+            var correo = await Shell.Current.DisplayPromptAsync("Recuperar contraseña",
+                "Escribe el correo de tu cuenta y te enviaremos un enlace para crear una nueva contraseña.",
+                "Enviar", "Cancelar", placeholder: "correo@ejemplo.com",
+                keyboard: Keyboard.Email, initialValue: Correo);
+
+            if (string.IsNullOrWhiteSpace(correo)) return;   // tocó Cancelar
+
+            EstaOcupado = true;
+            var resultado = await _iniciarSesion.RecuperarContrasenaAsync(correo);
+            EstaOcupado = false;
+
+            await Shell.Current.DisplayAlertAsync(resultado.EsExito ? "Revisa tu correo" : "Aviso",
+                                                  resultado.Mensaje, "Aceptar");
+        }
+
         [RelayCommand]
         private async Task IrARegistroAsync()
         {

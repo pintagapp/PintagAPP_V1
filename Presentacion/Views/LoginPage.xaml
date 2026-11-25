@@ -27,6 +27,11 @@
             </HorizontalStackLayout>
 
             <Button Text="Iniciar sesión" Command="{Binding IniciarSesionCommand}" />
+            <Button Text="¿Olvidaste tu contraseña?"
+                    Command="{Binding OlvideContrasenaCommand}"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource Primary}"
+                    Padding="0" />
 
             <ActivityIndicator IsRunning="{Binding EstaOcupado}" IsVisible="{Binding EstaOcupado}" />
 

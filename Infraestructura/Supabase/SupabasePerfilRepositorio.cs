@@ -65,10 +65,11 @@ namespace PintagAPP.Infraestructura.Supabase
             return guardado;
         }
         // Solo con sesión iniciada: los visitantes sin cuenta no tienen permiso sobre la columna teléfono
+       
         public async Task<string?> ObtenerTelefonoAsync(long perfilId)
         {
-            var filas = await _http.Cliente.GetFromJsonAsync<List<PerfilDto>>(
-                $"rest/v1/perfiles_oferente?id=eq.{perfilId}&select=id,telefono");
+            var filas = await _http.ObtenerConCacheAsync<List<PerfilDto>>(
+                $"rest/v1/perfiles_oferente?id=eq.{perfilId}&select=id,telefono", privado: true);
 
             return filas?.FirstOrDefault()?.Telefono;
         }

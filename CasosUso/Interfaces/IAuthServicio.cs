@@ -10,6 +10,8 @@ namespace PintagAPP.CasosUso.Interfaces
 
         Task<Resultado> IniciarSesionAsync(string correo, string contrasena);
 
+        Task<Resultado> RecuperarContrasenaAsync(string correo);   // envía el correo para cambiar la contraseña
+
         Task<bool> RestaurarSesionAsync();   // al abrir la app, si ya había iniciado sesión antes
 
         Task CerrarSesionAsync();

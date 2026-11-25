@@ -78,6 +78,20 @@ namespace PintagAPP.CasosUso.Ofertas
             return miPerfil?.Id == oferta.PerfilId;
         }
 
+        // Con sesión, deja guardado el teléfono para poder llamar aunque después no haya internet
+        public async Task PrecargarTelefonoAsync(Oferta oferta)
+        {
+            if (!_sesion.EstaIniciada) return;
+            try
+            {
+                await _perfiles.ObtenerTelefonoAsync(oferta.PerfilId);
+            }
+            catch (Exception)
+            {
+                // Es solo una ayuda para el modo offline: si falla, no pasa nada
+            }
+        }
+
         // Obtiene el teléfono (solo con sesión) y registra el contacto
         public async Task<(Resultado Resultado, DatosContacto? Datos)> ContactarAsync(Oferta oferta, string canal)
         {

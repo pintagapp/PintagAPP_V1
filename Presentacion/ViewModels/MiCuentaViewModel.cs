@@ -15,6 +15,8 @@ namespace PintagAPP.Presentacion.ViewModels
 
         public string Nombre => _cuenta.Nombre;
         public string RolTexto => _cuenta.RolTexto;
+        // Lee la versión real del APK (ApplicationDisplayVersion del .csproj)
+        public string Version => $"Píntag Conecta · versión {AppInfo.Current.VersionString}";
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(EliminarCuentaCommand))]

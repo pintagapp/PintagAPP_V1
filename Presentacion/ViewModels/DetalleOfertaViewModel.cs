@@ -101,6 +101,7 @@ namespace PintagAPP.Presentacion.ViewModels
 
                 EsMia = await _explorar.EsMiaAsync(_oferta);
                 PuedeContactar = !EsMia;
+                if (!EsMia) _ = _explorar.PrecargarTelefonoAsync(_oferta);
                 await CargarOpinionesAsync();
                 HayDatos = true;
             }
@@ -126,6 +127,7 @@ namespace PintagAPP.Presentacion.ViewModels
 
                 EsMia = await _explorar.EsMiaAsync(_oferta);
                 PuedeContactar = !EsMia;
+                if (!EsMia) _ = _explorar.PrecargarTelefonoAsync(_oferta);
                 await CargarOpinionesAsync();
             }
             catch (Exception)

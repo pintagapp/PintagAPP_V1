@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using PintagAPP.CasosUso.Perfiles;
 using PintagAPP.Dominio.Entidades;
 using System.Collections.ObjectModel;
-using static Android.Util.EventLogTags;
+
 
 namespace PintagAPP.Presentacion.ViewModels
 {
