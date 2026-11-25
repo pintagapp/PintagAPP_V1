@@ -7,12 +7,22 @@
   <style>
     body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-           background:#F2F6FA; color:#1f2937; padding:16px; box-sizing:border-box; }
+           background:#E8F5E9; color:#1f2937; padding:16px; box-sizing:border-box; }
     .tarjeta { background:#fff; max-width:420px; width:100%; border-radius:16px; padding:32px 24px;
                text-align:center; box-shadow:0 4px 20px rgba(0,0,0,.08); }
     .icono { font-size:56px; }
-    h1 { font-size:22px; margin:12px 0 8px; }
+    h1 { font-size:22px; margin:12px 0 8px; color:#1B5E20; }
     p { font-size:16px; line-height:1.5; color:#4b5563; margin:0 0 8px; }
+    form { text-align:left; margin-top:16px; }
+    label { font-size:14px; color:#374151; display:block; margin:12px 0 4px; }
+    input[type=password], input[type=text] { width:100%; box-sizing:border-box; padding:12px;
+           font-size:16px; border:1px solid #cbd5e1; border-radius:8px; }
+    .ver { display:flex; align-items:center; gap:6px; margin-top:10px; font-size:14px; }
+    button { width:100%; margin-top:18px; padding:14px; font-size:16px; border:0; border-radius:8px;
+             background:#2E7D32; color:#fff; cursor:pointer; }
+    button:disabled { background:#9ca3af; }
+    .error { color:#c62828; font-size:14px; margin-top:10px; min-height:18px; }
+    .oculto { display:none; }
     .marca { margin-top:24px; font-size:13px; color:#9ca3af; }
   </style>
 </head>
@@ -21,20 +31,103 @@
     <div class="icono" id="icono">✅</div>
     <h1 id="titulo">¡Cuenta confirmada!</h1>
     <p id="texto">Tu correo fue verificado. Ya puedes volver a la app <b>Píntag Conecta</b> e iniciar sesión.</p>
+
+    <form id="formulario" class="oculto">
+      <label for="clave1">Nueva contraseña (mínimo 8 caracteres)</label>
+      <input type="password" id="clave1" autocomplete="new-password">
+      <label for="clave2">Repite la nueva contraseña</label>
+      <input type="password" id="clave2" autocomplete="new-password">
+      <div class="ver"><input type="checkbox" id="ver"><span>Mostrar contraseña</span></div>
+      <div class="error" id="error"></div>
+      <button type="submit" id="boton">Guardar nueva contraseña</button>
+    </form>
+
     <div class="marca">Píntag Conecta · GAD Parroquial de Píntag</div>
   </div>
+
   <script>
-    // Si el enlace venció o ya fue usado, Supabase lo indica en la dirección (#error=...)
-    var h = window.location.hash || "";
-    if (h.indexOf("error") !== -1) {
-      document.getElementById("icono").textContent = "⚠️";
-      document.getElementById("titulo").textContent = "El enlace ya no es válido";
-      document.getElementById("texto").innerHTML =
-        "Puede que haya vencido o que ya lo hayas usado. Intenta <b>iniciar sesión</b> en la app; " +
-        "si no te deja, regístrate de nuevo para recibir otro correo.";
-    }
+    // Datos públicos del proyecto (la misma clave publishable que usa la app)
+    var SUPABASE_URL = "https://ppwpaciajftxjbdtbfho.supabase.co";
+    var CLAVE_PUBLICA = "sb_publishable_ukzBt87ZWv1bF5SoWhKzEA_SMiFftVZ";
+
+    // Supabase manda los datos en la dirección, después del #
+    var datos = new URLSearchParams((window.location.hash || "").substring(1));
+    var token = datos.get("access_token");
+    var tipo = datos.get("type");
+
     // Quita el token de la barra de direcciones por seguridad
-    if (h) history.replaceState(null, "", window.location.pathname);
+    if (window.location.hash) history.replaceState(null, "", window.location.pathname);
+
+    function mostrar(icono, titulo, html) {
+      document.getElementById("icono").textContent = icono;
+      document.getElementById("titulo").textContent = titulo;
+      document.getElementById("texto").innerHTML = html;
+    }
+
+    if (datos.get("error")) {
+      // Enlace vencido o ya usado
+      mostrar("⚠️", "El enlace ya no es válido",
+        "Puede que haya vencido o que ya lo hayas usado.<br>Si querías cambiar tu contraseña, pide otro enlace en la app " +
+        "con <b>«¿Olvidaste tu contraseña?»</b>. Si estabas confirmando tu cuenta, intenta <b>iniciar sesión</b>.");
+    } else if (tipo === "recovery" && token) {
+      // Cambio de contraseña
+      mostrar("🔑", "Crea tu nueva contraseña", "Escríbela dos veces y toca <b>Guardar</b>.");
+      document.getElementById("formulario").classList.remove("oculto");
+    }
+
+    document.getElementById("ver").addEventListener("change", function () {
+      var t = this.checked ? "text" : "password";
+      document.getElementById("clave1").type = t;
+      document.getElementById("clave2").type = t;
+    });
+
+    document.getElementById("formulario").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var c1 = document.getElementById("clave1").value;
+      var c2 = document.getElementById("clave2").value;
+      var error = document.getElementById("error");
+      var boton = document.getElementById("boton");
+      error.textContent = "";
+
+      if (c1.length < 8) { error.textContent = "La contraseña debe tener al menos 8 caracteres."; return; }
+      if (c1 !== c2) { error.textContent = "Las dos contraseñas no coinciden."; return; }
+
+      boton.disabled = true;
+      boton.textContent = "Guardando...";
+
+      fetch(SUPABASE_URL + "/auth/v1/user", {
+        method: "PUT",
+        headers: {
+          "apikey": CLAVE_PUBLICA,
+          "Authorization": "Bearer " + token,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ password: c1 })
+      })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, estado: r.status, json: j }; }); })
+      .then(function (res) {
+        if (res.ok) {
+          document.getElementById("formulario").classList.add("oculto");
+          mostrar("✅", "¡Contraseña cambiada!",
+            "Vuelve a la app <b>Píntag Conecta</b> e inicia sesión con tu nueva contraseña.");
+          return;
+        }
+        var texto = JSON.stringify(res.json);
+        if (texto.indexOf("same_password") !== -1)
+          error.textContent = "La nueva contraseña debe ser distinta a la anterior.";
+        else if (res.estado === 401 || res.estado === 403)
+          error.textContent = "El enlace venció. Pide otro desde la app.";
+        else
+          error.textContent = "No se pudo cambiar la contraseña. Inténtalo de nuevo.";
+        boton.disabled = false;
+        boton.textContent = "Guardar nueva contraseña";
+      })
+      .catch(function () {
+        error.textContent = "Sin conexión a internet. Inténtalo de nuevo.";
+        boton.disabled = false;
+        boton.textContent = "Guardar nueva contraseña";
+      });
+    });
   </script>
 </body>
 </html>
